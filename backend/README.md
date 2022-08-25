@@ -1,3 +1,3 @@
-# Commands
-### `npm install`
-### `npm start`
+## Getting Started
+### - `npm install`
+### - `npm start`

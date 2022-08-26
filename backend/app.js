@@ -7,7 +7,6 @@ const app = express();
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-
 app.use(userAuthRouter);
 
 // check if connection with database is successful
@@ -19,5 +18,3 @@ db.sequelize
   .catch(() => {
     throw Error("Unable to connect database");
   });
-
-

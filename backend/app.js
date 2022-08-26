@@ -15,6 +15,7 @@ db.sequelize
   .authenticate()
   .then(() => {
     app.listen(process.env.PORT);
+    
   })
   .catch(() => {
     throw Error("Unable to connect database");

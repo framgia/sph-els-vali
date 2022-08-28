@@ -1,11 +1,11 @@
 const { validationResult } = require("express-validator");
-const bcrypt = require('bcrypt')
+const bcrypt = require("bcrypt");
 const { User } = require("../models");
 
 const signup = async (req, res, next) => {
   const { first_name, last_name, email, password } = req.body;
   const errors = validationResult(req);
-  
+
   // check if there is any invalid inputs entered by user
   //if there is send an error message
   if (!errors.isEmpty()) {
@@ -13,13 +13,13 @@ const signup = async (req, res, next) => {
   }
 
   try {
-    const salt = await bcrypt.genSalt(10)
-    const hash = await bcrypt.hash(password, salt)
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
     const user = await User.create({
       first_name,
       last_name,
       email,
-      password:hash,
+      password: hash,
       avatar_url: "https://www.istockphoto.com/illustrations/avatar-icons",
     });
 

@@ -4,6 +4,7 @@ const {
   signup,
   confirmEmail,
   resendConfirmation,
+  login,
 } = require("../controllers/userAuthController");
 const { User } = require("../models");
 
@@ -45,5 +46,17 @@ router.post(
 router.get("/signup/confirmation/:token", confirmEmail);
 
 router.post("/signup/resendconfirmation", resendConfirmation);
+
+router.post(
+  "/login",
+  [
+    body("email", "Incorrect email or password").isEmail().normalizeEmail(),
+    body("password", "Incorrect email or password")
+      .trim()
+      .isLength({ min: 5 })
+      .isAlphanumeric(),
+  ],
+  login
+);
 
 module.exports = router;

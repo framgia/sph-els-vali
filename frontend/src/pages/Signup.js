@@ -3,13 +3,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { authInputSchema } from "../validations/authInputValidation";
 import learningSvg from "../images/learning_sketching_nd4f.svg";
 import SignupForm from "../components/singupForm";
-import { useState } from "react";
-import EmailConfirmation from "../components/emailConfirmation";
 import useSignup from "../hooks/useSignup";
+import { useNavigate } from "react-router";
 
 const Signup = () => {
-  const [isFormFilled, setIsFormFilled] = useState(false);
   const { signup, error, isLoading } = useSignup();
+
+  const navigate = useNavigate();
 
   const {
     register,
@@ -20,10 +20,9 @@ const Signup = () => {
     mode: "onChange",
   });
 
-  const onSubmit = ({ first_name, last_name, email, password }) => {
-    signup(first_name, last_name, email, password).then(() => {
-      setIsFormFilled(true);
-    });
+  const onSubmit = async ({ first_name, last_name, email, password }) => {
+    await signup(first_name, last_name, email, password);
+    navigate("/signup/verify");
   };
 
   return (
@@ -49,17 +48,14 @@ const Signup = () => {
         {error && (
           <p className="text-red-600 my-3 p-5 bg-red-200 rounded-md">{error}</p>
         )}
-        {!isFormFilled && (
-          <SignupForm
-            handleSubmit={handleSubmit}
-            onSubmit={onSubmit}
-            register={register}
-            errors={errors}
-            error={error}
-            isLoading={isLoading}
-          />
-        )}
-        {isFormFilled && <EmailConfirmation />}
+        <SignupForm
+          handleSubmit={handleSubmit}
+          onSubmit={onSubmit}
+          register={register}
+          errors={errors}
+          error={error}
+          isLoading={isLoading}
+        />
       </div>
     </div>
   );

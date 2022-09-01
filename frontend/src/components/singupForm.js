@@ -8,10 +8,7 @@ const SignupForm = ({
   isLoading,
 }) => {
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="sm:mx-auto sm:min-w-[100%] lg:min-w-[70%] xl:min-w-[50%] sm:max-w-[70%] xl:max-w-[50%]  text-main shadow-lg p-12 flex flex-col space-y-2 bg-white rounded-xl"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="auth_cont_wrapper">
       <label htmlFor="first_name">First Name</label>
       <input
         className={`form-input ${errors.first_name && "border-b-red-600"}`}
@@ -76,7 +73,7 @@ const SignupForm = ({
       </p>
 
       <button
-        className={`mx-auto w-32 p-2 text-white bg-green-600 rounded-md transition transform ease-out duration-150 active:bg-green-500 active:scale-90 ${
+        className={`mx-auto  text-white btn ${
           isLoading &&
           "cursor-not-allowed bg-green-300 active:scale-100 active:bg-green-300"
         }`}

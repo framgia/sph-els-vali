@@ -1,28 +1,29 @@
 import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { authInputSchema } from "../validations/authInputValidation";
 import learningSvg from "../images/learning_sketching_nd4f.svg";
 import SignupForm from "../components/singupForm";
 import useSignup from "../hooks/useSignup";
-import { useNavigate } from "react-router";
 
 const Signup = () => {
   const { signup, error, isLoading } = useSignup();
-
   const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(authInputSchema),
     mode: "onChange",
   });
-
   const onSubmit = async ({ first_name, last_name, email, password }) => {
     await signup(first_name, last_name, email, password);
-    navigate("/signup/verify");
+    if (!error) {
+      navigate("/signup/verify");
+    }
   };
 
   return (
@@ -33,9 +34,9 @@ const Signup = () => {
         <div className="w-fill h-[80%] my-5 flex flex-col justify-center items-center space-y-5">
           <h2 className="text-[3rem]">Welcome to family !!!</h2>
           <p className="text-[2rem]">Already have an account?</p>
-          <button className="w-32 p-2 bg-green-600 rounded-md transition transform ease-out duration-150 active:bg-green-500 active:scale-90">
+          <Link className="btn text-center" to="/login">
             Login
-          </button>
+          </Link>
           <img className="w-[50%] h-auto" src={learningSvg} alt="signup_img" />
         </div>
       </div>
@@ -45,9 +46,9 @@ const Signup = () => {
         <h1 className="lg:hidden text-[4rem] font-medium w-max mb-5 mx-auto">
           E-Learning
         </h1>
-        {error && (
+        {error ? (
           <p className="text-red-600 my-3 p-5 bg-red-200 rounded-md">{error}</p>
-        )}
+        ) : null}
         <SignupForm
           handleSubmit={handleSubmit}
           onSubmit={onSubmit}

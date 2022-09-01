@@ -75,4 +75,16 @@ const confirmEmail = async (req, res) => {
   }
 };
 
-module.exports = { signup, confirmEmail };
+const resendConfirmation = async (req, res) => {
+  try {
+    const user = await User.findOne({ where: { email: req.body.email } });
+    await sendEmailConfirmation(user.id, req.body.email);
+    res.status(200).json({ message: "email's send" });
+  } catch (err) {
+    res.status(400).json({
+      error: "Could not resend the confirmation email, please try again later",
+    });
+  }
+};
+
+module.exports = { signup, confirmEmail, resendConfirmation };

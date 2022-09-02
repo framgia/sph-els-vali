@@ -97,23 +97,31 @@ const login = async (req, res, next) => {
 
   try {
     const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ error: "Incorrect email or password", resend_flag: true });
+    }
+
     const doMatch = await bcrypt.compare(password, user.password);
 
     if (!doMatch) {
-      return res.status(400).json({ error: "Incorrect email or password" });
+      return res
+        .status(400)
+        .json({ error: "Incorrect email or password", resend_flag: true });
     }
 
     if (!user.verified) {
       return res
         .status(401)
-        .json({ error: "You are not verified", verified: user.verified });
+        .json({ error: "You are not verified", resend_flag: user.verified });
     }
     const token = createJWTToken(user.id);
-    res.status(200).json({ id: user.id, token, verified: user.verified });
+    res.status(200).json({ id: user.id, token, resend_flag: user.verified });
   } catch (err) {
     res.status(400).json({
-      error: "Something went wrong, please try again later",
-      verified: true,
+      error: "Incorrect email or password",
+      resend_flag: true,
     });
   }
 };

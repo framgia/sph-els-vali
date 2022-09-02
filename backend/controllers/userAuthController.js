@@ -97,10 +97,18 @@ const login = async (req, res, next) => {
 
   try {
     const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ error: "Incorrect email or password", verified: true });
+    }
+
     const doMatch = await bcrypt.compare(password, user.password);
 
     if (!doMatch) {
-      return res.status(400).json({ error: "Incorrect email or password" });
+      return res
+        .status(400)
+        .json({ error: "Incorrect email or password", verified: true });
     }
 
     if (!user.verified) {
@@ -112,7 +120,7 @@ const login = async (req, res, next) => {
     res.status(200).json({ id: user.id, token, verified: user.verified });
   } catch (err) {
     res.status(400).json({
-      error: "Something went wrong, please try again later",
+      error: "Incorrect email or password",
       verified: true,
     });
   }

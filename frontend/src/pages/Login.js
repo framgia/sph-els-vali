@@ -9,7 +9,7 @@ import { useState } from "react";
 import EmailConfirmation from "../components/emailConfirmation";
 
 const Login = () => {
-  const { login, error, isLoading, isVerified } = UseLogin();
+  const { login, error, isLoading, isResendFlag } = UseLogin();
   const [resendError, setResendError] = useState("");
 
   const navigate = useNavigate();
@@ -40,7 +40,7 @@ const Login = () => {
             {error || resendError}
           </p>
         ) : null}
-        {isVerified && (
+        {isResendFlag && (
           <LoginForm
             handleSubmit={handleSubmit}
             onSubmit={onSubmit}
@@ -50,7 +50,7 @@ const Login = () => {
             isLoading={isLoading}
           />
         )}
-        {!isVerified && (
+        {!isResendFlag && (
           <EmailConfirmation
             userEmail={watch().email}
             setResendError={setResendError}

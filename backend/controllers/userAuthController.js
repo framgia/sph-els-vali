@@ -100,7 +100,7 @@ const login = async (req, res, next) => {
     if (!user) {
       return res
         .status(400)
-        .json({ error: "Incorrect email or password", verified: true });
+        .json({ error: "Incorrect email or password", resend_flag: true });
     }
 
     const doMatch = await bcrypt.compare(password, user.password);
@@ -108,20 +108,20 @@ const login = async (req, res, next) => {
     if (!doMatch) {
       return res
         .status(400)
-        .json({ error: "Incorrect email or password", verified: true });
+        .json({ error: "Incorrect email or password", resend_flag: true });
     }
 
     if (!user.verified) {
       return res
         .status(401)
-        .json({ error: "You are not verified", verified: user.verified });
+        .json({ error: "You are not verified", resend_flag: user.verified });
     }
     const token = createJWTToken(user.id);
-    res.status(200).json({ id: user.id, token, verified: user.verified });
+    res.status(200).json({ id: user.id, token, resend_flag: user.verified });
   } catch (err) {
     res.status(400).json({
       error: "Incorrect email or password",
-      verified: true,
+      resend_flag: true,
     });
   }
 };

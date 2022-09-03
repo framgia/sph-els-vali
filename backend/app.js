@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const db = require("./models/index");
 const userAuthRouter = require("./routes/userAuth");
+const feedRouter = require("./routes/feed");
 
 const app = express();
 app.use(cors());
@@ -10,6 +11,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use(userAuthRouter);
+app.use(feedRouter);
 
 // check if connection with database is successful
 db.sequelize

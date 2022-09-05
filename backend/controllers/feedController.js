@@ -23,6 +23,7 @@ const getActivities = async (currentUserId, targetUserId) => {
                 ...result,
                 {
                   activity: `You learnt ${quiz.name}`,
+                  avatar_url: user.avatar_url,
                   timestamp: activity.updatedAt,
                 },
               ];
@@ -30,7 +31,8 @@ const getActivities = async (currentUserId, targetUserId) => {
               result = [
                 ...result,
                 {
-                  activity: `${user.name} followed ${quiz.name}`,
+                  activity: `${user.first_name} learnt ${quiz.name}`,
+                  avatar_url: user.avatar_url,
                   timestamp: activity.updatedAt,
                 },
               ];
@@ -43,6 +45,7 @@ const getActivities = async (currentUserId, targetUserId) => {
                 ...result,
                 {
                   activity: `You followed ${uInfo.first_name}`,
+                  avatar_url: user.avatar_url,
                   timestamp: activity.updatedAt,
                 },
               ];
@@ -51,6 +54,7 @@ const getActivities = async (currentUserId, targetUserId) => {
                 ...result,
                 {
                   activity: `${user.name} followed ${uInfo.first_name}`,
+                  avatar_url: uInfo.avatar_url,
                   timestamp: activity.updatedAt,
                 },
               ];
@@ -95,22 +99,19 @@ const getLearntWordsAndLessons = async (targetUserId) => {
   }
 };
 
-const getUserDashboard = async (req, res, next) => {
-  // for now I'll pass user id in query to send specific user's data but it is gonna change on frontend implementation, I'll pass the id to req.user in a middleware where I check if the user is authorized or not
-  const user_id = req.body.user;
+const getActivity = async (req, res, next) => {
+  let targetUserId;
+  const user_id = req.user;
+  const { id } = req.params;
+  if (id !== "null") {
+    targetUserId = Number(id);
+  } else {
+    targetUserId = user_id;
+  }
+
+  const activities = await getActivities(user_id, targetUserId);
+  res.status(200).json({ activities });
   try {
-    const user = await getUser(user_id);
-    const learntWordsAndLessons = await getLearntWordsAndLessons(user_id);
-    const activity = await getActivities(user_id, user_id);
-    res.status(200).json({
-      user: {
-        first_name: user.first_name,
-        last_name: user.last_name,
-        avatar_url: user.avatar_url,
-      },
-      activity,
-      learntWordsAndLessons,
-    });
   } catch (err) {
     res
       .status(400)
@@ -118,4 +119,44 @@ const getUserDashboard = async (req, res, next) => {
   }
 };
 
-module.exports = { getUserDashboard };
+const getLearnigsCount = async (req, res, next) => {
+  let targetUserId;
+  const user_id = req.user;
+  const { id } = req.params;
+  if (id !== "null") {
+    targetUserId = Number(id);
+  } else {
+    targetUserId = user_id;
+  }
+
+  try {
+    const learntWordsAndLessons = await getLearntWordsAndLessons(targetUserId);
+    res.status(200).json({ learntWordsAndLessons });
+  } catch (err) {
+    res
+      .status(400)
+      .json({ error: "Something went wrong, please try again later" });
+  }
+};
+
+const getUserInfo = async (req, res, next) => {
+  let targetUserId;
+  const user_id = req.user;
+  const { id } = req.params;
+  if (id !== "null") {
+    targetUserId = Number(id);
+  } else {
+    targetUserId = user_id;
+  }
+
+  try {
+    const user = await getUser(targetUserId);
+    res.status(200).json({ user });
+  } catch (err) {
+    res
+      .status(400)
+      .json({ error: "Something went wrong, please try again later" });
+  }
+};
+
+module.exports = { getActivity, getLearnigsCount, getUserInfo };

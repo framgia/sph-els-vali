@@ -12,4 +12,17 @@
   .btn {
     @apply w-32 p-2 bg-green-600 rounded-md transition transform ease-out duration-150 active:bg-green-500 active:scale-90;
   }
+  .trans {
+    @apply hover:bg-gray-100 transition-all active:bg-gray-50 ease-out duration-150;
+  }
+  .pagination a {
+    @apply bg-gray-100 px-3 py-1 rounded-full hover:bg-gray-200 transition-all active:bg-gray-50 ease-out duration-150 cursor-pointer select-none flex items-center;
+  }
+  .pagination .selected a {
+    @apply bg-blue-600 text-white transition-all active:bg-blue-500 ease-out duration-150;
+  }
+  .pagination .previous a,
+  .pagination .next a {
+    @apply font-bold text-[1.2rem];
+  }
 }

@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { authInputSchema } from "../validations/authInputValidation";
 import learningSvg from "../images/learning_sketching_nd4f.svg";
-import SignupForm from "../components/singupForm";
+import SignupForm from "../components/SingupForm";
 import useSignup from "../hooks/useSignup";
 
 const Signup = () => {
@@ -13,7 +13,6 @@ const Signup = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(authInputSchema),

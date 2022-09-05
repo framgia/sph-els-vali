@@ -5,8 +5,8 @@ import {
   ExclamationTriangleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import NavLinks from "./NavLinks";
 import { useAuthContext } from "../hooks/useAuthContext";
 import useGetUser from "../hooks/useGetUser";
@@ -25,6 +25,13 @@ const Navbar = () => {
   };
 
   const { error, isLoading, data } = useGetUser("null");
+
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.addEventListener("beforeunload", () => {
+      localStorage.setItem("prevPath", pathname);
+    });
+  }, []);
 
   return (
     <nav className="flex w-[100%] justify-between p-3 bg-white shadow-md">

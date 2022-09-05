@@ -3,8 +3,9 @@ import {
   UserGroupIcon,
   Squares2X2Icon,
 } from "@heroicons/react/24/outline";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 const NavLinks = ({ mobile }) => {
+  const { pathname } = useLocation();
   return (
     <ul
       className={
@@ -16,7 +17,9 @@ const NavLinks = ({ mobile }) => {
       <li>
         <Link
           to="/categories"
-          className="cursor-pointer flex items-center trans p-2 rounded-xl"
+          className={`cursor-pointer flex items-center trans p-2 rounded-xl ${
+            pathname === "/categories" && "active_nav"
+          }`}
         >
           <Squares2X2Icon className="w-8 mr-2" /> Categories
         </Link>
@@ -24,7 +27,9 @@ const NavLinks = ({ mobile }) => {
       <li>
         <Link
           to="/users"
-          className="cursor-pointer flex items-center trans p-2 rounded-xl"
+          className={`cursor-pointer flex items-center trans p-2 rounded-xl ${
+            pathname === "/users" && "active_nav"
+          }`}
         >
           <UserGroupIcon className="w-8 mr-2" /> Users
         </Link>
@@ -32,7 +37,9 @@ const NavLinks = ({ mobile }) => {
       <li>
         <Link
           to="/profile"
-          className="cursor-pointer flex items-center p-2 rounded-xl trans"
+          className={`cursor-pointer flex items-center p-2 rounded-xl trans ${
+            pathname === "/profile" && "active_nav"
+          }`}
         >
           <UserIcon className="w-8 mr-2" /> Profile
         </Link>

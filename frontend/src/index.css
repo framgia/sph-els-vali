@@ -25,4 +25,7 @@
   .pagination .next a {
     @apply font-bold text-[1.2rem];
   }
+  .active_nav {
+    @apply bg-blue-600 text-white hover:bg-blue-500 active:bg-blue-600;
+  }
 }

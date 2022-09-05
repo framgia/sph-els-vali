@@ -31,6 +31,13 @@ module.exports = {
         createdAt: new Date("2022 01 05 13:01:00 GMT+00:00"),
         updatedAt: new Date("2022 01 07 13:01:00 GMT+00:00"),
       },
+      {
+        id: 5,
+        follower_id: 1,
+        following_id: 4,
+        createdAt: new Date("2022 01 05 13:01:00 GMT+00:00"),
+        updatedAt: new Date("2022 01 07 13:01:00 GMT+00:00"),
+      },
     ]);
   },
 

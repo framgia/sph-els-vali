@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { authInputSchema } from "../validations/authInputValidation";
 import learningSvg from "../images/learning_sketching_nd4f.svg";
-import SignupForm from "../components/SingupForm";
+import SignupForm from "../components/SingupForms";
 import useSignup from "../hooks/useSignup";
 
 const Signup = () => {

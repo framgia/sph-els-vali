@@ -1,5 +1,5 @@
 import Activities from "./components/ActivitySection";
-import Navbar from "../../components/Navbar";
+import Navbar from "../../components/Navbars";
 import UserInfo from "./components/UserInfoSection";
 
 const UserHome = () => {

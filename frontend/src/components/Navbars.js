@@ -7,7 +7,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import NavLinks from "./NavLinks";
+import NavLinks from "./NavLink";
 import { useAuthContext } from "../hooks/useAuthContext";
 import useGetUser from "../hooks/useGetUser";
 

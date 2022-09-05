@@ -161,17 +161,10 @@ const getUserInfo = async (req, res, next) => {
 
 const getAllUsersInfo = async (req, res, next) => {
   try {
-    const users = await User.findAll();
-    const userList = [];
-    await users.map(async ({ id, first_name, last_name, avatar_url }) => {
-      userList.push({
-        id,
-        first_name,
-        last_name,
-        avatar_url,
-      });
+    const users = await User.findAll({
+      attributes: ["id", "first_name", "last_name", "avatar_url"],
     });
-    res.status(200).json({ users: userList });
+    res.status(200).json({ users });
   } catch (err) {
     res
       .status(400)

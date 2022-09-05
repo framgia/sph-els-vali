@@ -10,7 +10,8 @@ module.exports = {
         email: "example@example.com",
         password:
           "$2b$10$ZYP5a8PkVzuU439ZQpd0r.inRmj6Teax/.tzy.pQOTkyU1SqJcEc.",
-        avatar_url: "https://www.istockphoto.com/illustrations/avatar-icons",
+        avatar_url:
+          "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png",
         verified: true,
         createdAt: new Date("2022 01 01 13:01:00 GMT+00:00"),
         updatedAt: new Date("2022 01 01 13:01:00 GMT+00:00"),
@@ -22,7 +23,8 @@ module.exports = {
         email: "check@check.com",
         password:
           "$2b$10$jkzAan4N6DmF.XxTpkeZu.MXwnB7YzFg.yuKtD8t8UcAjygIVtdu2",
-        avatar_url: "https://www.istockphoto.com/illustrations/avatar-icons",
+        avatar_url:
+          "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png",
         verified: true,
         createdAt: new Date("2022 01 02 14:05:00 GMT+00:00"),
         updatedAt: new Date("2022 01 02 14:05:00 GMT+00:00"),
@@ -34,7 +36,8 @@ module.exports = {
         email: "user@user.com",
         password:
           "$2b$10$OtQ1/fb1yBD9YdU5G75/du9IvY7wuRGbqf687deuDLmxKTJlNyHqC",
-        avatar_url: "https://www.istockphoto.com/illustrations/avatar-icons",
+        avatar_url:
+          "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png",
         verified: true,
         createdAt: new Date("2022 01 03 14:05:00 GMT+00:00"),
         updatedAt: new Date("2022 01 03 14:05:00 GMT+00:00"),
@@ -46,7 +49,8 @@ module.exports = {
         email: "user1@user.com",
         password:
           "$2b$10$RcGbGZXnKe5DZozG6A1gpuiD2Feq6r3qJGBc4K0hcUWayfvKVu8LS",
-        avatar_url: "https://www.istockphoto.com/illustrations/avatar-icons",
+        avatar_url:
+          "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png",
         verified: true,
         createdAt: new Date("2022 01 04 14:05:00 GMT+00:00"),
         updatedAt: new Date("2022 01 04 14:05:00 GMT+00:00"),
@@ -58,7 +62,8 @@ module.exports = {
         email: "user2@user.com",
         password:
           "$2b$10$MWuR3qLM1PV.0rNNrBblgeZ9rBAk5HU1jzpkW8MmZSmC0dVnAdxUu",
-        avatar_url: "https://www.istockphoto.com/illustrations/avatar-icons",
+        avatar_url:
+          "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png",
         verified: true,
         createdAt: new Date("2022 01 05 14:05:00 GMT+00:00"),
         updatedAt: new Date("2022 01 05 14:05:00 GMT+00:00"),

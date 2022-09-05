@@ -159,4 +159,22 @@ const getUserInfo = async (req, res, next) => {
   }
 };
 
-module.exports = { getActivity, getLearnigsCount, getUserInfo };
+const getAllUsersInfo = async (req, res, next) => {
+  try {
+    const users = await User.findAll({
+      attributes: ["id", "first_name", "last_name", "avatar_url"],
+    });
+    res.status(200).json({ users });
+  } catch (err) {
+    res
+      .status(400)
+      .json({ error: "Something went wrong, please try again later" });
+  }
+};
+
+module.exports = {
+  getActivity,
+  getLearnigsCount,
+  getUserInfo,
+  getAllUsersInfo,
+};

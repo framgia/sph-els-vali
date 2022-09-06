@@ -70,6 +70,31 @@ const getActivities = async (currentUserId, targetUserId) => {
               ];
             }
           });
+        } else if (activity.relatable_type === "unfollows") {
+          const id = await Follow.findByPk(activity.relatable_id, {
+            attributes: ["following_id"],
+          });
+          await getUser(id.following_id).then(async (uInfo) => {
+            if (currentUserId === targetUserId) {
+              result = [
+                ...result,
+                {
+                  activity: `You unfollowed ${uInfo.first_name}`,
+                  avatar_url: user.avatar_url,
+                  timestamp: activity.updatedAt,
+                },
+              ];
+            } else {
+              result = [
+                ...result,
+                {
+                  activity: `${user.name} unfollowed ${uInfo.first_name}`,
+                  avatar_url: uInfo.avatar_url,
+                  timestamp: activity.updatedAt,
+                },
+              ];
+            }
+          });
         }
       })
     );
@@ -184,20 +209,24 @@ const postfollowAndUnfollow = async (req, res, next) => {
   const { id } = req.body;
   const user_id = req.user;
   try {
-    const check = await Follow.findAll({
+    const check = await Follow.findOne({
       where: { follower_id: user_id, following_id: id },
+      order: [["createdAt", "DESC"]],
     });
 
-    if (check.length > 0) {
-      await Follow.destroy({ where: { id: check[0].id } });
-      await ActivityLog.destroy({
-        where: { relatable_id: check[0].id, user_id: user_id },
+    if (check.flag) {
+      await Follow.update({ flag: false }, { where: { id: check.id } });
+      await ActivityLog.create({
+        relatable_id: check.id,
+        relatable_type: "unfollows",
+        user_id,
       });
       res.status(200).json({ message: "Unfollow operation succeded" });
     } else {
       const follow = await Follow.create({
         follower_id: user_id,
         following_id: id,
+        flag: true,
       });
       await ActivityLog.create({
         relatable_id: follow.id,

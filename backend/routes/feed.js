@@ -20,6 +20,6 @@ router.get("/user/info/:id", getUserInfo);
 
 router.get("/users", getAllUsersInfo);
 
-router.post("/user/follow_and_unfollow", postfollowAndUnfollow);
+router.put("/user/follow_and_unfollow", postfollowAndUnfollow);
 
 module.exports = router;

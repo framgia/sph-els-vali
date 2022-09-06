@@ -4,6 +4,7 @@ const {
   getLearnigsCount,
   getUserInfo,
   getAllUsersInfo,
+  postfollowAndUnfollow,
 } = require("../controllers/feedController");
 const isAuth = require("../middleware/isAuth");
 
@@ -18,5 +19,7 @@ router.get("/user/learnings_count/:id", getLearnigsCount);
 router.get("/user/info/:id", getUserInfo);
 
 router.get("/users", getAllUsersInfo);
+
+router.post("/user/follow_and_unfollow", postfollowAndUnfollow);
 
 module.exports = router;

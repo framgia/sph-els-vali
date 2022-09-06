@@ -205,8 +205,8 @@ const getAllUsersInfo = async (req, res, next) => {
   }
 };
 
-const postfollowAndUnfollow = async (req, res, next) => {
-  const { id } = req.body;
+const putfollowAndUnfollow = async (req, res, next) => {
+  const { id } = req.params;
   const user_id = req.user;
   try {
     const check = await Follow.findOne({
@@ -247,5 +247,5 @@ module.exports = {
   getLearnigsCount,
   getUserInfo,
   getAllUsersInfo,
-  postfollowAndUnfollow,
+  putfollowAndUnfollow,
 };

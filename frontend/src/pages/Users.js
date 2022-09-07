@@ -1,4 +1,5 @@
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
+import FollowButton from "../components/FollowButton";
 import Navbar from "../components/Navbar";
 import { useAuthContext } from "../hooks/useAuthContext";
 import useGetAllUsers from "../hooks/useGetAllUsers";
@@ -6,6 +7,7 @@ import useGetAllUsers from "../hooks/useGetAllUsers";
 const Users = () => {
   const { data, error, isLoading } = useGetAllUsers();
   const { user } = useAuthContext();
+
   return (
     <div className="h-[100vh]">
       <Navbar />
@@ -17,17 +19,22 @@ const Users = () => {
               return (
                 <div
                   key={u.id}
-                  className="flex border-b-2 border-dotted p-3 space-x-5"
+                  className="flex border-b-2 border-dotted p-3 justify-between items-center"
                 >
-                  <img
-                    src={u.avatar_url}
-                    alt="icon"
-                    className="w-16 rounded-full"
-                  />
-                  <p className="font-bold">{`${u.first_name} ${u.last_name}`}</p>
-                  <p className="italic font-thin">
-                    {u.id === user.id && "you"}
-                  </p>
+                  <div className="flex space-x-5">
+                    <img
+                      src={u.avatar_url}
+                      alt="icon"
+                      className="w-16 rounded-full"
+                    />
+                    <p className="font-bold">{`${u.first_name} ${u.last_name}`}</p>
+                    <p className="italic font-thin">
+                      {u.id === user.id && "you"}
+                    </p>
+                  </div>
+                  {u.id !== user.id && (
+                    <FollowButton followingState={u.follows} id={u.id} />
+                  )}
                 </div>
               );
             })}

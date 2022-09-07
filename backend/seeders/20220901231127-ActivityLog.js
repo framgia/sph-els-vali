@@ -67,14 +67,6 @@ module.exports = {
         createdAt: new Date("2022 01 08 13:01:00 GMT+00:00"),
         updatedAt: new Date("2022 01 08 13:01:00 GMT+00:00"),
       },
-      {
-        id: 9,
-        relatable_id: 5,
-        relatable_type: "follows",
-        user_id: 1,
-        createdAt: new Date("2022 01 09 13:01:00 GMT+00:00"),
-        updatedAt: new Date("2022 01 09 13:01:00 GMT+00:00"),
-      },
     ]);
   },
 

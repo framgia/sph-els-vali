@@ -22,7 +22,7 @@ const Activities = () => {
   return (
     <div className="inline min-w-fit bg-white flex-grow p-6 rounded-xl shadow-md space-y-4">
       <h2 className="text-[2.5rem] font-medium border-b-2">Activities</h2>
-      {typeof currentItems !== "string" ? (
+      {currentItems.length > 0 ? (
         currentItems.map((activityLog, i) => {
           return (
             <div

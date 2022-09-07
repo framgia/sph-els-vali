@@ -4,11 +4,18 @@ function usePagination(itemsPerPage, data) {
   const [currentItems, setCurrentItems] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
-
   useEffect(() => {
     const endOffset = itemOffset + itemsPerPage;
-    setCurrentItems(data.slice(itemOffset, endOffset));
-    setPageCount(Math.ceil(data.length / itemsPerPage));
+    if (typeof data !== "string") {
+      setCurrentItems(
+        data
+          .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+          .slice(itemOffset, endOffset)
+      );
+      setPageCount(Math.ceil(data.length / itemsPerPage));
+    } else {
+      setPageCount(1);
+    }
   }, [itemOffset, itemsPerPage, data]);
 
   const handlePageClick = (event) => {

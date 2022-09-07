@@ -194,10 +194,44 @@ const getUserInfo = async (req, res, next) => {
 
 const getAllUsersInfo = async (req, res, next) => {
   try {
-    const users = await User.findAll({
-      attributes: ["id", "first_name", "last_name", "avatar_url"],
+    const user = await User.findAll({
+      include: [
+        {
+          model: Follow,
+          where: { flag: true, follower_id: req.user },
+          attributes: ["following_id"],
+        },
+      ],
     });
-    res.status(200).json({ users });
+    const followingIdList = [];
+    if (user.length > 0) {
+      await user[0].Follows.map((m) => {
+        followingIdList.push(m.following_id);
+      });
+    }
+
+    const usersList = [];
+    const users = await User.findAll();
+    users.map(({ id, first_name, last_name, avatar_url }) => {
+      if (followingIdList.includes(id)) {
+        usersList.push({
+          id,
+          first_name,
+          last_name,
+          avatar_url,
+          follows: true,
+        });
+      } else {
+        usersList.push({
+          id,
+          first_name,
+          last_name,
+          avatar_url,
+          follows: false,
+        });
+      }
+    });
+    res.status(200).json({ users: usersList });
   } catch (err) {
     res
       .status(400)
@@ -213,7 +247,6 @@ const putfollowAndUnfollow = async (req, res, next) => {
       where: { follower_id: user_id, following_id: id },
       order: [["createdAt", "DESC"]],
     });
-
     if (check && check.flag) {
       await Follow.update({ flag: false }, { where: { id: check.id } });
       await ActivityLog.create({

@@ -214,7 +214,7 @@ const putfollowAndUnfollow = async (req, res, next) => {
       order: [["createdAt", "DESC"]],
     });
 
-    if (check.flag) {
+    if (check && check.flag) {
       await Follow.update({ flag: false }, { where: { id: check.id } });
       await ActivityLog.create({
         relatable_id: check.id,
@@ -222,7 +222,7 @@ const putfollowAndUnfollow = async (req, res, next) => {
         user_id,
       });
       res.status(200).json({ message: "Unfollow operation succeded" });
-    } else if (!check.flag) {
+    } else if (check && check.flag === false) {
       await Follow.update({ flag: true }, { where: { id: check.id } });
       await ActivityLog.create({
         relatable_id: check.id,

@@ -194,9 +194,9 @@ const getUserInfo = async (req, res, next) => {
 };
 
 const getAllUsersInfo = async (req, res, next) => {
-  const { search, filter } = req.query;
+  const { search, orderBy } = req.query;
   let searchQuery;
-  let filterQuery;
+  let orderByQuery;
   if (search.length > 0) {
     searchQuery = {
       [Op.or]: {
@@ -207,10 +207,10 @@ const getAllUsersInfo = async (req, res, next) => {
   } else {
     searchQuery = { first_name: { [Op.ne]: null } };
   }
-  if (filter.length > 0) {
-    filterQuery = [["first_name", filter]];
+  if (orderBy.length > 0) {
+    orderByQuery = [["first_name", orderBy]];
   } else {
-    filterQuery = [["id", "ASC"]];
+    orderByQuery = [["id", "ASC"]];
   }
   try {
     const user = await User.findAll({
@@ -232,7 +232,7 @@ const getAllUsersInfo = async (req, res, next) => {
     const usersList = [];
     const users = await User.findAll({
       where: searchQuery,
-      order: filterQuery,
+      order: orderByQuery,
     });
     users.map(({ id, first_name, last_name, avatar_url }) => {
       if (followingIdList.includes(id)) {

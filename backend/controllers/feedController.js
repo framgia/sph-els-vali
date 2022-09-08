@@ -195,23 +195,16 @@ const getUserInfo = async (req, res, next) => {
 
 const getAllUsersInfo = async (req, res, next) => {
   const { search, orderBy } = req.query;
-  let searchQuery;
-  let orderByQuery;
-  if (search.length > 0) {
-    searchQuery = {
-      [Op.or]: {
-        first_name: { [Op.startsWith]: search },
-        last_name: { [Op.startsWith]: search },
-      },
-    };
-  } else {
-    searchQuery = { first_name: { [Op.ne]: null } };
-  }
-  if (orderBy.length > 0) {
-    orderByQuery = [["first_name", orderBy]];
-  } else {
-    orderByQuery = [["id", "ASC"]];
-  }
+
+  const searchQuery = {
+    [Op.or]: {
+      first_name: { [Op.like]: `%${search}%` },
+      last_name: { [Op.like]: `%${search}%` },
+    },
+  };
+
+  const orderByQuery = [["first_name", orderBy]];
+
   try {
     const user = await User.findAll({
       include: [
@@ -231,8 +224,8 @@ const getAllUsersInfo = async (req, res, next) => {
 
     const usersList = [];
     const users = await User.findAll({
-      where: searchQuery,
-      order: orderByQuery,
+      where: search ? searchQuery : { first_name: { [Op.ne]: null } },
+      order: orderBy ? orderByQuery : [["id", "ASC"]],
     });
     users.map(({ id, first_name, last_name, avatar_url }) => {
       if (followingIdList.includes(id)) {

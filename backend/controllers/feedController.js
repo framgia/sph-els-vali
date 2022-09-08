@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const {
   User,
   ActivityLog,
@@ -193,6 +194,17 @@ const getUserInfo = async (req, res, next) => {
 };
 
 const getAllUsersInfo = async (req, res, next) => {
+  const { search, orderBy } = req.query;
+
+  const searchQuery = {
+    [Op.or]: {
+      first_name: { [Op.like]: `%${search}%` },
+      last_name: { [Op.like]: `%${search}%` },
+    },
+  };
+
+  const orderByQuery = [["first_name", orderBy]];
+
   try {
     const user = await User.findAll({
       include: [
@@ -211,7 +223,10 @@ const getAllUsersInfo = async (req, res, next) => {
     }
 
     const usersList = [];
-    const users = await User.findAll();
+    const users = await User.findAll({
+      where: search ? searchQuery : { first_name: { [Op.ne]: null } },
+      order: orderBy ? orderByQuery : [["id", "ASC"]],
+    });
     users.map(({ id, first_name, last_name, avatar_url }) => {
       if (followingIdList.includes(id)) {
         usersList.push({
@@ -247,6 +262,7 @@ const putfollowAndUnfollow = async (req, res, next) => {
       where: { follower_id: user_id, following_id: id },
       order: [["createdAt", "DESC"]],
     });
+
     if (check && check.flag) {
       await Follow.update({ flag: false }, { where: { id: check.id } });
       await ActivityLog.create({

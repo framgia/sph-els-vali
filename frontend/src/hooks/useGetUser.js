@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 
 const useGetUser = (userId) => {
@@ -8,24 +8,27 @@ const useGetUser = (userId) => {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(null);
 
-  const getUser = async (userId) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/user/info/${userId}`,
-        {
-          headers: { Authorization: `Bearer ${user.token}` },
-        }
-      );
-      setData(res.data.user);
-      setIsLoading(false);
+  const getUser = useCallback(
+    async (userId) => {
+      setIsLoading(true);
       setError(null);
-    } catch (err) {
-      setIsLoading(false);
-      setError("Something went wrong, please try again later");
-    }
-  };
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_BACKEND_URL}/user/info/${userId}`,
+          {
+            headers: { Authorization: `Bearer ${user.token}` },
+          }
+        );
+        setData(res.data.user);
+        setIsLoading(false);
+        setError(null);
+      } catch (err) {
+        setIsLoading(false);
+        setError("Something went wrong, please try again later");
+      }
+    },
+    [userId]
+  );
   useEffect(() => {
     if (user) {
       getUser(userId);

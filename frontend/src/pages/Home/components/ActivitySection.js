@@ -1,23 +1,25 @@
 import usePagination from "../../../hooks/usePagination";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Pagination from "../../../components/Pagination";
 import Moment from "react-moment";
 import useGetActivities from "../../../hooks/useGetActivities";
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 
 const Activities = () => {
   const [itemsPerPage, setItemsPerPage] = useState(5);
+  const { user } = useAuthContext();
 
   const {
     error: acitvityError,
     isLoading: activityLoad,
     data: activityData,
-  } = useGetActivities("null");
+  } = useGetActivities(user.id);
 
-  const { handlePageClick, currentItems, pageCount } = usePagination(
-    itemsPerPage,
-    activityData ? activityData : []
+  const { handlePageClick, currentItems, pageCount } = useCallback(
+    usePagination(itemsPerPage, activityData ? activityData : []),
+    [itemsPerPage, activityData]
   );
   return (
     <div className="inline min-w-fit bg-white flex-grow p-6 rounded-xl shadow-md space-y-4">

@@ -1,20 +1,22 @@
-import useGetUserInfo from "../../../hooks/useGetUserInfo";
 import useGetLearningsCount from "../../../hooks/useGetLearningsCount";
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import useGetUser from "../../../hooks/useGetUser";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 
 const UserInfo = () => {
+  const { user } = useAuthContext();
   const {
     error: userInfoError,
     isLoading: UserInfoLoad,
     data: userInfo,
-  } = useGetUserInfo("null");
+  } = useGetUser(user.id);
 
   const {
     error: learningsError,
     isLoading: learningsLoad,
     data: learntWordsAndLessons,
-  } = useGetLearningsCount("null");
+  } = useGetLearningsCount(user.id);
 
   return (
     <div className="inline bg-white p-6 rounded-xl shadow-md min-w-fit space-y-4">

@@ -4,6 +4,7 @@ function usePagination(itemsPerPage, data) {
   const [currentItems, setCurrentItems] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
+
   useEffect(() => {
     const endOffset = itemOffset + itemsPerPage;
     if (typeof data !== "string") {
@@ -23,7 +24,7 @@ function usePagination(itemsPerPage, data) {
     setItemOffset(newOffset);
   };
 
-  return { handlePageClick, currentItems, pageCount };
+  return { handlePageClick, currentItems, pageCount, setItemOffset };
 }
 
 export default usePagination;

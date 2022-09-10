@@ -134,16 +134,10 @@ const getLearntWordsAndLessons = async (targetUserId) => {
 };
 
 const getActivity = async (req, res, next) => {
-  let targetUserId;
   const user_id = req.user;
-  const { id } = req.params;
-  if (id !== "null") {
-    targetUserId = Number(id);
-  } else {
-    targetUserId = user_id;
-  }
+  const id = Number(req.params.id);
 
-  const activities = await getActivities(user_id, targetUserId);
+  const activities = await getActivities(user_id, id);
   res.status(200).json({ activities });
   try {
   } catch (err) {
@@ -154,17 +148,10 @@ const getActivity = async (req, res, next) => {
 };
 
 const getLearnigsCount = async (req, res, next) => {
-  let targetUserId;
-  const user_id = req.user;
-  const { id } = req.params;
-  if (id !== "null") {
-    targetUserId = Number(id);
-  } else {
-    targetUserId = user_id;
-  }
+  const id = Number(req.params.id);
 
   try {
-    const learntWordsAndLessons = await getLearntWordsAndLessons(targetUserId);
+    const learntWordsAndLessons = await getLearntWordsAndLessons(id);
     res.status(200).json({ learntWordsAndLessons });
   } catch (err) {
     res
@@ -174,17 +161,10 @@ const getLearnigsCount = async (req, res, next) => {
 };
 
 const getUserInfo = async (req, res, next) => {
-  let targetUserId;
-  const user_id = req.user;
-  const { id } = req.params;
-  if (id !== "null") {
-    targetUserId = Number(id);
-  } else {
-    targetUserId = user_id;
-  }
+  const id = Number(req.params.id);
 
   try {
-    const user = await getUser(targetUserId);
+    const user = await getUser(id);
     res.status(200).json({ user });
   } catch (err) {
     res

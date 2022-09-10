@@ -19,20 +19,16 @@ function App() {
             path="/"
             element={user ? <UserHome /> : <Navigate to="/login" />}
           />
-        </Routes>
-        <Routes>
           <Route
             path="/users"
             element={user ? <Users /> : <Navigate to="/login" />}
           />
-        </Routes>
-        <Routes>
+
           <Route
             path="/signup"
             element={!user ? <Signup /> : <Navigate to="/" />}
           />
-        </Routes>
-        <Routes>
+
           <Route
             path="/login"
             element={
@@ -45,11 +41,9 @@ function App() {
               )
             }
           />
-        </Routes>
-        <Routes>
+
           <Route path="/signup/verified" element={<VerifiedUser />} />
-        </Routes>
-        <Routes>
+
           <Route path="/signup/verify" element={<VerifyUser />} />
         </Routes>
       </BrowserRouter>

@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuthContext } from "./hooks/useAuthContext";
 
-import Signup from "./pages/Signup";
-import Login from "./pages/Login";
+import Signup from "./pages/signup/Signup";
+import Login from "./pages/login/Login";
 import UserHome from "./pages/Home/UserHome";
-import Users from "./pages/Users";
+import Users from "./pages/users/Users";
 import VerifiedUser from "./pages/VerifiedUser";
 import VerifyUser from "./pages/VerifyUser";
 

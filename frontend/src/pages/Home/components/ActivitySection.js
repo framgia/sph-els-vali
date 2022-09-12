@@ -1,6 +1,6 @@
 import usePagination from "../../../hooks/usePagination";
 import { useState, useCallback } from "react";
-import Pagination from "../../../components/Pagination";
+import Pagination from "../../components/Pagination";
 import Moment from "react-moment";
 import useGetActivities from "../../../hooks/useGetActivities";
 import { ArrowPathIcon } from "@heroicons/react/24/solid";

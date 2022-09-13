@@ -7,7 +7,7 @@ import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 
-const Activities = () => {
+const Activities = ({ id }) => {
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const { user } = useAuthContext();
 
@@ -15,7 +15,7 @@ const Activities = () => {
     error: acitvityError,
     isLoading: activityLoad,
     data: activityData,
-  } = useGetActivities(user.id);
+  } = useGetActivities(id ? id : user.id);
 
   const { handlePageClick, currentItems, pageCount } = useCallback(
     usePagination(itemsPerPage, activityData ? activityData : []),

@@ -2,24 +2,22 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 
-const useGetAllUsers = (search, order) => {
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState(null);
+const UseGetFollowsCount = (userId) => {
   const { user } = useAuthContext();
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState(null);
 
-  const getAllUsers = async () => {
+  const getFollowsCount = async (userId) => {
     setIsLoading(true);
     setError(null);
-
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/users?search=${search}&orderBy=${order}`,
+        `${process.env.REACT_APP_BACKEND_URL}/follows_count/${userId}`,
         {
           headers: { Authorization: `Bearer ${user.token}` },
         }
       );
-
       setData(res.data);
       setIsLoading(false);
       setError(null);
@@ -31,11 +29,11 @@ const useGetAllUsers = (search, order) => {
 
   useEffect(() => {
     if (user) {
-      getAllUsers();
+      getFollowsCount(userId);
     }
-  }, [search, order, user]);
+  }, [userId]);
 
-  return { data, error, isLoading };
+  return { error, isLoading, data };
 };
 
-export default useGetAllUsers;
+export default UseGetFollowsCount;

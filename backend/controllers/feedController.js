@@ -279,10 +279,32 @@ const putfollowAndUnfollow = async (req, res, next) => {
   }
 };
 
+const getFollowsCount = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const followingCount = await Follow.findAll({
+      where: { follower_id: id, flag: true },
+    });
+    const followerCount = await Follow.findAll({
+      where: { following_id: id, flag: true },
+    });
+
+    res.status(200).json({
+      followers: followerCount.length,
+      following: followingCount.length,
+    });
+  } catch (err) {
+    res
+      .status(401)
+      .json({ error: "Something went wrong, please try again later" });
+  }
+};
+
 module.exports = {
   getActivity,
   getLearnigsCount,
   getUserInfo,
   getAllUsersInfo,
   putfollowAndUnfollow,
+  getFollowsCount,
 };

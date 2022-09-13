@@ -1,6 +1,7 @@
 # E-Learning sph-els-vali
 
 ### Tech Stack
+
 - **Expressjs** - _https://expressjs.com/_
 - **Sequelize** - _https://sequelize.org/_
 - **Reactjs** - _https://reactjs.org/_
@@ -30,10 +31,10 @@ npx sequelize db:migrate
 6. Run the seeder on backend
 
 ```
-npx sequelize db:seed:all
+npx sequelize-cli db:seed --seed 20220831071727-User.js  20220901231553-Quiz.js 20220901231334-UserLesson.js 20220901231240-Follow.js  20220901231127-ActivityLog.js 20220901231658-Question.js 20220901231713-UserAnswer.js
 ```
 
-7. Run npm start on both backend and frontend 
+7. Run npm start on both backend and frontend
 
 ## Documentation
 

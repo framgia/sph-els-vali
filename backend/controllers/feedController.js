@@ -9,10 +9,10 @@ const {
 } = require("../models");
 
 const getUser = async (targetUserId) => {
-  const { first_name, last_name, email, avatar_url } = await User.findByPk(
+  const { id, first_name, last_name, email, avatar_url } = await User.findByPk(
     targetUserId
   );
-  return { first_name, last_name, email, avatar_url };
+  return { id, first_name, last_name, email, avatar_url };
 };
 
 const getActivities = async (currentUserId, targetUserId) => {
@@ -64,7 +64,7 @@ const getActivities = async (currentUserId, targetUserId) => {
               result = [
                 ...result,
                 {
-                  activity: `${user.name} followed ${uInfo.first_name}`,
+                  activity: `${user.first_name} followed ${uInfo.first_name}`,
                   avatar_url: uInfo.avatar_url,
                   timestamp: activity.updatedAt,
                 },
@@ -89,7 +89,7 @@ const getActivities = async (currentUserId, targetUserId) => {
               result = [
                 ...result,
                 {
-                  activity: `${user.name} unfollowed ${uInfo.first_name}`,
+                  activity: `${user.first_name} unfollowed ${uInfo.first_name}`,
                   avatar_url: uInfo.avatar_url,
                   timestamp: activity.updatedAt,
                 },
@@ -162,10 +162,29 @@ const getLearnigsCount = async (req, res, next) => {
 
 const getUserInfo = async (req, res, next) => {
   const id = Number(req.params.id);
+  const user_id = req.user;
 
   try {
+    let follows;
+    const { Follows } = await User.findByPk(user_id, { include: [Follow] });
     const user = await getUser(id);
-    res.status(200).json({ user });
+    const followingIdList = [];
+
+    if (Follows.length > 0) {
+      Follows.map((f) => {
+        if (f.flag) {
+          followingIdList.push(f.following_id);
+        }
+      });
+    }
+
+    if (followingIdList.includes(id)) {
+      follows = true;
+    } else {
+      follows = false;
+    }
+    let userResult = { ...user, follows };
+    res.status(200).json({ user: userResult });
   } catch (err) {
     res
       .status(400)

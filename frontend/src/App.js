@@ -7,6 +7,7 @@ import UserHome from "./pages/Home/UserHome";
 import Users from "./pages/users/Users";
 import VerifiedUser from "./pages/VerifiedUser";
 import VerifyUser from "./pages/VerifyUser";
+import UserProfile from "./pages/UserProfile";
 
 function App() {
   const { user } = useAuthContext();
@@ -20,15 +21,17 @@ function App() {
             element={user ? <UserHome /> : <Navigate to="/login" />}
           />
           <Route
+            path="/users/:id"
+            element={user ? <UserProfile /> : <Navigate to="/login" />}
+          />
+          <Route
             path="/users"
             element={user ? <Users /> : <Navigate to="/login" />}
           />
-
           <Route
             path="/signup"
             element={!user ? <Signup /> : <Navigate to="/" />}
           />
-
           <Route
             path="/login"
             element={
@@ -41,9 +44,7 @@ function App() {
               )
             }
           />
-
           <Route path="/signup/verified" element={<VerifiedUser />} />
-
           <Route path="/signup/verify" element={<VerifyUser />} />
         </Routes>
       </BrowserRouter>

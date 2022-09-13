@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 
-const useGetAllUsers = () => {
+const useGetAllUsers = (search, order) => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(null);
@@ -14,7 +14,7 @@ const useGetAllUsers = () => {
 
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/users`,
+        `${process.env.REACT_APP_BACKEND_URL}/users?search=${search}&orderBy=${order}`,
         {
           headers: { Authorization: `Bearer ${user.token}` },
         }
@@ -33,7 +33,7 @@ const useGetAllUsers = () => {
     if (user) {
       getAllUsers();
     }
-  }, []);
+  }, [search, order]);
 
   return { data, error, isLoading };
 };

@@ -8,13 +8,13 @@ import {
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import NavLinks from "./NavLinks";
-import { useAuthContext } from "../hooks/useAuthContext";
-import useGetUser from "../hooks/useGetUser";
+import { useAuthContext } from "../../hooks/useAuthContext";
+import useGetUser from "../../hooks/useGetUser";
 
 const Navbar = () => {
+  const { user, dispatch } = useAuthContext();
   const [toggle, setToggle] = useState(false);
   const [showSideBar, setShowSideBar] = useState(false);
-  const { dispatch } = useAuthContext();
   const handleToggle = () => {
     setToggle(!toggle);
   };
@@ -24,7 +24,7 @@ const Navbar = () => {
     dispatch({ type: "LOGOUT" });
   };
 
-  const { error, isLoading, data } = useGetUser("null");
+  const { error, isLoading, data } = useGetUser(user.id);
 
   const { pathname } = useLocation();
   useEffect(() => {

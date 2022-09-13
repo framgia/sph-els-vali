@@ -1,4 +1,4 @@
-import useTimer from "../hooks/useTimer";
+import useTimer from "../../../hooks/useTimer";
 import axios from "axios";
 
 const EmailConfirmation = ({ userEmail, setResendError }) => {

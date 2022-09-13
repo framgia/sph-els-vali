@@ -1,12 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
-import LoginForm from "../components/LoginForm";
+import LoginForm from "./components/LoginForm";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { loginInputSchema } from "../validations/loginValidation";
-import UseLogin from "../hooks/useLogin";
-import learningSvg from "../images/learning_sketching_nd4f.svg";
+import { loginInputSchema } from "../../validations/loginValidation";
+import UseLogin from "../../hooks/useLogin";
+import learningSvg from "../../images/learning_sketching_nd4f.svg";
 import { useState } from "react";
-import EmailConfirmation from "../components/EmailConfirmation";
+import EmailConfirmation from "./components/EmailConfirmation";
 
 const Login = () => {
   const { login, error, isLoading, isResendFlag } = UseLogin();

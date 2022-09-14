@@ -62,7 +62,12 @@ const Navbar = () => {
           <ChevronDownIcon className="w-6 h-6" />
           {toggle && (
             <div className="absolute flex flex-col w-[8rem] right-0 -bottom-20 shadow-lg rounded-b-md bg-white text-center">
-              <div className="p-2 border-b-2 trans">Settings</div>
+              <Link
+                to={"/profile_edit/personal_info"}
+                className="p-2 border-b-2 trans"
+              >
+                Edit Profile
+              </Link>
               <div
                 onClick={handleLogOut}
                 className="p-2  text-red-600 rounded-b-md trans"

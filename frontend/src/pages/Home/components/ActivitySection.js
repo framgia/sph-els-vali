@@ -33,7 +33,7 @@ const Activities = ({ id }) => {
               className="flex border-b-2 border-dotted p-2 space-x-4"
             >
               <img
-                className="w-[3.5rem] rounded-full"
+                className="w-[3.5rem] h-[3.5rem] rounded-full object-cover object-center"
                 src={activityLog?.avatar_url}
                 alt="icon"
               />

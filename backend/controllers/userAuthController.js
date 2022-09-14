@@ -126,4 +126,10 @@ const login = async (req, res, next) => {
   }
 };
 
-module.exports = { signup, confirmEmail, resendConfirmation, login };
+module.exports = {
+  signup,
+  confirmEmail,
+  resendConfirmation,
+  login,
+  sendEmailConfirmation,
+};

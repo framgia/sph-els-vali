@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import AvatarChange from "./components/AvatarChange";
 import EditEmail from "./components/EditEmail";
 import EditPassword from "./components/EditPassword";
@@ -8,25 +8,83 @@ import Navbar from "../components/Navbar";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import useGetUser from "../../hooks/useGetUser";
 import HeaderSection from "./components/HeaderSection";
+import usePutPersonalInfo from "../../hooks/usePutPersonalInfo";
+import { ToastContainer, toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
+import usePutEmail from "../../hooks/usePutEmail";
+import usePutPassword from "../../hooks/usePutPassword";
 
 const EditProfile = () => {
-  const { user } = useAuthContext();
+  const navigate = useNavigate();
+  const { user, dispatch } = useAuthContext();
   const [canChangeAvatar, setcanChangeAvatar] = useState(false);
+  const { putPersonalInfo } = usePutPersonalInfo();
+  const { putEmail } = usePutEmail();
+  const { putPassword, error } = usePutPassword();
 
   const [image, setImage] = useState("");
 
   const { data } = useGetUser(user.id);
 
-  const onPersonalInfoSubmit = ({ first_name, last_name }) => {
-    // I'll send request to backend
+  const toastSuccess = (message) => {
+    return toast.success(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
   };
 
-  const onEmailEditSubmit = ({ email }) => {
-    //I'll send request to backend
+  const toastError = (message) => {
+    return toast.error(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
   };
 
-  const onPasswordEditSubmit = ({ new_password }) => {
-    //I'll send request to backend
+  const onPersonalInfoSubmit = async ({ first_name, last_name }) => {
+    await putPersonalInfo(first_name, last_name, image)
+      .then(() => {
+        toastSuccess("Personal Info was successfully updated!");
+      })
+      .catch((err) => {
+        toastError("Something went wrong!");
+      });
+  };
+
+  const onEmailEditSubmit = async ({ email }) => {
+    await putEmail(email)
+      .then(() => {
+        toastSuccess("You email was successfully updated!");
+        localStorage.removeItem("user");
+        dispatch({ type: "LOGOUT" });
+      })
+      .catch((err) => {
+        toastError(
+          "You used the same email or something went wrong, please try again later"
+        );
+      });
+  };
+
+  const onPasswordEditSubmit = async ({ old_password, new_password }) => {
+    await putPassword(old_password, new_password)
+      .then(() => {
+        toastSuccess("Your password was successfully updated!");
+      })
+      .catch((err) => {
+        toastError(err.message);
+      });
   };
 
   return (
@@ -83,6 +141,17 @@ const EditProfile = () => {
           </div>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };

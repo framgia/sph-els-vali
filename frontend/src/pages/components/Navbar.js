@@ -50,7 +50,7 @@ const Navbar = () => {
           {data && (
             <>
               <img
-                className="sm:w-8 md:w-14 h-14 rounded-full object-contain"
+                className="sm:w-8 md:w-14 sm:h-8 md:h-14 rounded-full object-cover object-center"
                 src={data?.avatar_url}
                 alt="icon"
               />

@@ -31,7 +31,7 @@ const UserInfo = ({ id }) => {
         <div className="flex flex-col space-y-4">
           <div className="flex space-x-4  border-b-2 pb-5">
             <img
-              className="sm:w-[6rem] lg:w-[12rem] rounded-full"
+              className="sm:w-[6rem] lg:w-[12rem] sm:h-[6rem] lg:h-[12rem]  rounded-full object-cover object-center"
               src={userInfo?.avatar_url}
               alt="icon"
             />

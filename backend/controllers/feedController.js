@@ -1,3 +1,6 @@
+const fs = require("fs");
+const bcrypt = require("bcrypt");
+const path = require("path");
 const { Op } = require("sequelize");
 const {
   User,
@@ -7,6 +10,7 @@ const {
   Question,
   Follow,
 } = require("../models");
+const { sendEmailConfirmation } = require("./userAuthController");
 
 // Functions
 
@@ -67,7 +71,7 @@ const getActivities = async (currentUserId, targetUserId) => {
                 ...result,
                 {
                   activity: `${user.first_name} followed ${uInfo.first_name}`,
-                  avatar_url: uInfo.avatar_url,
+                  avatar_url: user.avatar_url,
                   timestamp: activity.updatedAt,
                 },
               ];
@@ -92,7 +96,7 @@ const getActivities = async (currentUserId, targetUserId) => {
                 ...result,
                 {
                   activity: `${user.first_name} unfollowed ${uInfo.first_name}`,
-                  avatar_url: uInfo.avatar_url,
+                  avatar_url: user.avatar_url,
                   timestamp: activity.updatedAt,
                 },
               ];
@@ -424,6 +428,103 @@ const getFollowers = async (req, res, next) => {
   }
 };
 
+const editPersonalInfo = async (req, res, next) => {
+  const user_id = req.user;
+  const first_name = req.body.first_name;
+  const last_name = req.body.last_name;
+  let avatar_url = req.body.avatar_url;
+  const defaultAvatar = `${process.env.BACKEND_URL}/images/default-icon.webp`;
+
+  try {
+    const user = await User.findByPk(user_id, { attributes: ["avatar_url"] });
+
+    if (
+      (user.avatar_url !== defaultAvatar && avatar_url === defaultAvatar) ||
+      (req.file && user.avatar_url !== defaultAvatar)
+    ) {
+      const PATH = path.join(
+        __dirname,
+        "..",
+        "public/" + user.avatar_url.split(`${process.env.BACKEND_URL}/`)[1]
+      );
+      fs.unlink(PATH, (err) => {
+        if (err) {
+          res.status(400).json({ error: "Unable to delete the image" });
+        }
+      });
+    }
+
+    if (req.file) {
+      avatar_url =
+        process.env.BACKEND_URL +
+        "/" +
+        req.file.path.replace(/\\/g, "/").split("/").slice(1).join("/");
+    }
+    await User.update(
+      { first_name, last_name, avatar_url },
+      { where: { id: user_id } }
+    );
+
+    res
+      .status(200)
+      .json({ message: "User information was successfully updated!" });
+  } catch (err) {
+    res
+      .status(401)
+      .json({ error: "Something went wrong, please try again later" });
+  }
+};
+
+const editEmail = async (req, res, next) => {
+  const user_id = req.user;
+  const { email } = req.body;
+  try {
+    const user = await User.findByPk(user_id, { attributes: ["email"] });
+    if (email === user.email) {
+      return res.status(400).json({
+        error: "The same email is used, please choose a different email",
+      });
+    }
+
+    await User.update({ email, verified: false }, { where: { id: user_id } });
+    await sendEmailConfirmation(user_id, email);
+
+    res.status(200).json({ message: "Email was successfully updated" });
+  } catch (err) {
+    res
+      .status(401)
+      .json({ error: "Something went wrong, please try again later" });
+  }
+};
+
+const editPassword = async (req, res, next) => {
+  const user_id = req.user;
+  const { old_password, new_password } = req.body;
+  try {
+    const user = await User.findByPk(user_id, { attributes: ["password"] });
+    const doMatch = await bcrypt.compare(old_password, user.password);
+
+    if (!doMatch) {
+      return res.status(400).json({ error: "Old password is incorrect" });
+    }
+    if (old_password === new_password) {
+      return res
+        .status(400)
+        .json({ error: "Old password and new password cannot be the same" });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(new_password, salt);
+    await User.update({ password: hash }, { where: { id: user_id } });
+
+    res.status(200).json({ message: "Password was successfully changed" });
+  } catch (err) {
+    res
+      .status(401)
+      .json({ error: "Something went wrong, please try again later" });
+  }
+};
+
 module.exports = {
   getActivity,
   getLearnigsCount,
@@ -433,4 +534,7 @@ module.exports = {
   getFollowsCount,
   getFollowing,
   getFollowers,
+  editPersonalInfo,
+  editEmail,
+  editPassword,
 };

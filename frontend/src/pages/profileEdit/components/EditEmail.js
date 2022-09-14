@@ -26,9 +26,14 @@ const EditEmail = ({ data, onEmailEditSubmit, setcanChangeAvatar }) => {
           ? handleSubmit(onEmailEditSubmit)
           : (e) => e.preventDefault()
       }
-      className="sm:w-[90%] lg:w-[70%] mx-auto space-y-28 flex flex-col items-center"
+      className="sm:w-[90%] lg:w-[70%] mx-auto flex flex-col items-center"
     >
-      <div className="flex sm:flex-col sm:space-y-6 md:space-y-0 md:flex-row justify-between md:space-x-2 w-full">
+      <p className="p-2 bg-orange-200 border-2 border-orange-500 text-orange-700">
+        WARNING!!!, please be aware that if you change your email, you'll be
+        forced to logout and sent a verification email. You will not be able to
+        login again untill you verify the new email!
+      </p>
+      <div className="mt-10 flex sm:flex-col sm:space-y-6 md:space-y-0 md:flex-row justify-between md:space-x-2 w-full">
         <div>
           <label className="block" htmlFor="email">
             Email
@@ -61,7 +66,7 @@ const EditEmail = ({ data, onEmailEditSubmit, setcanChangeAvatar }) => {
         </div>
       </div>
       <button
-        className={`btn text-white ${
+        className={`btn text-white mt-28 ${
           !Object.keys(dirtyFields).length > 0 &&
           "bg-gray-400 cursor-not-allowed active:bg-gray-400 active:scale-100"
         }`}

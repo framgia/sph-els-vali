@@ -8,6 +8,7 @@ import Users from "./pages/users/Users";
 import VerifiedUser from "./pages/VerifiedUser";
 import VerifyUser from "./pages/VerifyUser";
 import UserProfile from "./pages/UserProfile";
+import Follows from "./pages/follows/Follows";
 
 function App() {
   const { user } = useAuthContext();
@@ -27,6 +28,10 @@ function App() {
           <Route
             path="/users"
             element={user ? <Users /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/users/:id/follows/*"
+            element={user ? <Follows /> : <Navigate to="/login" />}
           />
           <Route
             path="/signup"

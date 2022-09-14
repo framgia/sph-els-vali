@@ -5,6 +5,7 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import UseGetFollowsCount from "../../../hooks/useGetFollowsCount";
 import FollowButton from "../../components/FollowButton";
 import { useAuthContext } from "../../../hooks/useAuthContext";
+import { Link } from "react-router-dom";
 
 const UserInfo = ({ id }) => {
   const { user } = useAuthContext();
@@ -47,12 +48,18 @@ const UserInfo = ({ id }) => {
             </div>
           </div>
           <div className="flex justify-evenly text-center text-[1.2rem] font-medium select-none">
-            <p className="cursor-pointer trans p-2 rounded-lg">
+            <Link
+              to={`/users/${userInfo.id}/follows/followers`}
+              className="cursor-pointer trans p-2 rounded-lg"
+            >
               {data?.followers} <br /> Followers
-            </p>
-            <p className="cursor-pointer trans p-2 rounded-lg">
+            </Link>
+            <Link
+              to={`/users/${userInfo.id}/follows/following`}
+              className="cursor-pointer trans p-2 rounded-lg"
+            >
               {data?.following} <br /> Following
-            </p>
+            </Link>
           </div>
           {user.id !== userInfo?.id && (
             <FollowButton

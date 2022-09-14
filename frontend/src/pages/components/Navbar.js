@@ -11,10 +11,11 @@ import NavLinks from "./NavLinks";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import useGetUser from "../../hooks/useGetUser";
 
-const Navbar = () => {
+const Navbar = ({ forceUpdate }) => {
   const { user, dispatch } = useAuthContext();
   const [toggle, setToggle] = useState(false);
   const [showSideBar, setShowSideBar] = useState(false);
+  const [forceRefresh, setForceRefresh] = useState(false);
   const handleToggle = () => {
     setToggle(!toggle);
   };
@@ -24,7 +25,7 @@ const Navbar = () => {
     dispatch({ type: "LOGOUT" });
   };
 
-  const { error, isLoading, data } = useGetUser(user.id);
+  const { error, isLoading, data } = useGetUser(user.id, forceRefresh);
 
   const { pathname } = useLocation();
   useEffect(() => {
@@ -33,6 +34,9 @@ const Navbar = () => {
     });
   }, []);
 
+  useEffect(() => {
+    setForceRefresh(!forceRefresh);
+  }, [forceUpdate]);
   return (
     <nav className="flex w-[100%] justify-between p-3 bg-white shadow-md">
       <Link

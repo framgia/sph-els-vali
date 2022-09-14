@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import AvatarChange from "./components/AvatarChange";
 import EditEmail from "./components/EditEmail";
 import EditPassword from "./components/EditPassword";
@@ -16,16 +16,16 @@ import usePutEmail from "../../hooks/usePutEmail";
 import usePutPassword from "../../hooks/usePutPassword";
 
 const EditProfile = () => {
-  const navigate = useNavigate();
   const { user, dispatch } = useAuthContext();
   const [canChangeAvatar, setcanChangeAvatar] = useState(false);
   const { putPersonalInfo } = usePutPersonalInfo();
   const { putEmail } = usePutEmail();
-  const { putPassword, error } = usePutPassword();
+  const { putPassword } = usePutPassword();
+  const [forceUpdate, setForceUpdate] = useState(false);
+
+  const { data } = useGetUser(user.id, forceUpdate);
 
   const [image, setImage] = useState("");
-
-  const { data } = useGetUser(user.id);
 
   const toastSuccess = (message) => {
     return toast.success(message, {
@@ -56,6 +56,7 @@ const EditProfile = () => {
   const onPersonalInfoSubmit = async ({ first_name, last_name }) => {
     await putPersonalInfo(first_name, last_name, image)
       .then(() => {
+        setForceUpdate(!forceUpdate);
         toastSuccess("Personal Info was successfully updated!");
       })
       .catch((err) => {
@@ -89,7 +90,7 @@ const EditProfile = () => {
 
   return (
     <div className="min-h-[100vh] w-[100%] h-[100%] flex flex-col">
-      <Navbar />
+      <Navbar forceUpdate={forceUpdate} />
       <div className=" flex-grow flex items-center justify-center ">
         <div className="flex sm:flex-col sm:space-x-0 sm:space-y-4 lg:space-y-0 sm:items-center lg:flex-row lg:space-x-24 w-[70%] justify-center lg:items-start m-3">
           {/* Left Side */}

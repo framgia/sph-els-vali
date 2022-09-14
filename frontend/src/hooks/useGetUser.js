@@ -2,7 +2,7 @@ import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 
-const useGetUser = (userId) => {
+const useGetUser = (userId, dependencies) => {
   const { user } = useAuthContext();
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -33,7 +33,7 @@ const useGetUser = (userId) => {
     if (user) {
       getUser(userId);
     }
-  }, [userId]);
+  }, [userId, dependencies]);
 
   return { error, isLoading, data };
 };

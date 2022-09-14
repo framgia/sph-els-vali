@@ -22,7 +22,7 @@ const User = ({ users, isLoading, error }) => {
                 <img
                   src={u.avatar_url}
                   alt="icon"
-                  className="w-16 rounded-full"
+                  className="w-16 h-16 rounded-full object-cover object-center"
                 />
                 <p className="font-bold">{`${u.first_name} ${u.last_name}`}</p>
                 <p className="italic font-thin">{u.id === user.id && "you"}</p>

@@ -1,8 +1,9 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { EditPasswordSchema } from "../../../validations/editPasswordValidation";
 
-const EditPassword = ({ onPasswordEditSubmit }) => {
+const EditPassword = ({ onPasswordEditSubmit, setcanChangeAvatar }) => {
   const {
     register,
     handleSubmit,
@@ -11,6 +12,10 @@ const EditPassword = ({ onPasswordEditSubmit }) => {
     resolver: yupResolver(EditPasswordSchema),
     mode: "onChange",
   });
+
+  useEffect(() => {
+    setcanChangeAvatar(false);
+  }, []);
 
   return (
     <form

@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { EditEmailSchema } from "../../../validations/editEmailValidation";
 
-const EditEmail = ({ data, onEmailEditSubmit }) => {
+const EditEmail = ({ data, onEmailEditSubmit, setcanChangeAvatar }) => {
   const {
     register,
     handleSubmit,
@@ -16,6 +16,7 @@ const EditEmail = ({ data, onEmailEditSubmit }) => {
 
   useEffect(() => {
     setValue("email", data?.email);
+    setcanChangeAvatar(false);
   }, [data]);
 
   return (

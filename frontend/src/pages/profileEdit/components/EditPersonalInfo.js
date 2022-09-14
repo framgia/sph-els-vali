@@ -3,7 +3,12 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { EditPersonalInfoSchema } from "../../../validations/editPrersonalInfoValidation";
 
-const EditPersonalInfo = ({ data, onPersonalInfoSubmit, image }) => {
+const EditPersonalInfo = ({
+  data,
+  onPersonalInfoSubmit,
+  image,
+  setcanChangeAvatar,
+}) => {
   const {
     register,
     handleSubmit,
@@ -17,6 +22,7 @@ const EditPersonalInfo = ({ data, onPersonalInfoSubmit, image }) => {
   useEffect(() => {
     setValue("first_name", data?.first_name);
     setValue("last_name", data?.last_name);
+    setcanChangeAvatar(true);
   }, [data]);
 
   return (

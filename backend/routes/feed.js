@@ -6,6 +6,8 @@ const {
   getAllUsersInfo,
   putfollowAndUnfollow,
   getFollowsCount,
+  getFollowing,
+  getFollowers,
 } = require("../controllers/feedController");
 const isAuth = require("../middleware/isAuth");
 
@@ -24,5 +26,9 @@ router.get("/users", getAllUsersInfo);
 router.put("/follows/:id", putfollowAndUnfollow);
 
 router.get("/follows_count/:id", getFollowsCount);
+
+router.get('/following/:id', getFollowing)
+
+router.get('/followers/:id', getFollowers)
 
 module.exports = router;

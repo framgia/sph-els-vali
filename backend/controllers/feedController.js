@@ -8,6 +8,8 @@ const {
   Follow,
 } = require("../models");
 
+// Functions
+
 const getUser = async (targetUserId) => {
   const { id, first_name, last_name, email, avatar_url } = await User.findByPk(
     targetUserId
@@ -133,6 +135,23 @@ const getLearntWordsAndLessons = async (targetUserId) => {
   }
 };
 
+const getFollowingIdLIst = async (user_id) => {
+  const followingIdList = [];
+  const following = await Follow.findAll({
+    where: { follower_id: user_id, flag: true },
+    attributes: ["following_id"],
+  });
+
+  if (following.length > 0) {
+    await following.map((m) => {
+      followingIdList.push(m.following_id);
+    });
+  }
+  return followingIdList;
+};
+
+// Controllers
+
 const getActivity = async (req, res, next) => {
   const user_id = req.user;
   const id = Number(req.params.id);
@@ -194,6 +213,7 @@ const getUserInfo = async (req, res, next) => {
 
 const getAllUsersInfo = async (req, res, next) => {
   const { search, orderBy } = req.query;
+  const user_id = req.user;
 
   const searchQuery = {
     [Op.or]: {
@@ -205,21 +225,7 @@ const getAllUsersInfo = async (req, res, next) => {
   const orderByQuery = [["first_name", orderBy]];
 
   try {
-    const user = await User.findAll({
-      include: [
-        {
-          model: Follow,
-          where: { flag: true, follower_id: req.user },
-          attributes: ["following_id"],
-        },
-      ],
-    });
-    const followingIdList = [];
-    if (user.length > 0) {
-      await user[0].Follows.map((m) => {
-        followingIdList.push(m.following_id);
-      });
-    }
+    const followingIdList = await getFollowingIdLIst(user_id);
 
     const usersList = [];
     const users = await User.findAll({
@@ -319,6 +325,105 @@ const getFollowsCount = async (req, res, next) => {
   }
 };
 
+const getFollowing = async (req, res, next) => {
+  const { id } = req.params;
+  const user_id = req.user;
+  const followingsList = [];
+
+  try {
+    const followingIdList = await getFollowingIdLIst(user_id);
+
+    const { Follows } = await User.findByPk(id, {
+      include: [{ model: Follow, attributes: ["following_id", "flag"] }],
+    });
+
+    if (Follows.length > 0) {
+      await Promise.all(
+        Follows.map(async (follow) => {
+          if (follow.flag) {
+            const { id, first_name, last_name, email, avatar_url } =
+              await User.findByPk(follow.following_id);
+            if (followingIdList.includes(id)) {
+              followingsList.push({
+                id,
+                first_name,
+                last_name,
+                email,
+                avatar_url,
+                follows: true,
+              });
+            } else {
+              followingsList.push({
+                id,
+                first_name,
+                last_name,
+                email,
+                avatar_url,
+                follows: false,
+              });
+            }
+          }
+        })
+      );
+    }
+
+    res.status(200).json({ following: followingsList });
+  } catch (err) {
+    res
+      .status(401)
+      .json({ error: "Something went wrong, please try again later" });
+  }
+};
+
+const getFollowers = async (req, res, next) => {
+  const { id } = req.params;
+  const user_id = req.user;
+  const followersList = [];
+
+  try {
+    const followingIdList = await getFollowingIdLIst(user_id);
+
+    const follower = await Follow.findAll({
+      where: { following_id: id, flag: true },
+      attributes: ["follower_id"],
+    });
+
+    if (follower.length > 0) {
+      await Promise.all(
+        follower.map(async (m) => {
+          const { id, first_name, last_name, email, avatar_url } =
+            await User.findByPk(m.follower_id);
+          if (followingIdList.includes(id)) {
+            followersList.push({
+              id,
+              first_name,
+              last_name,
+              email,
+              avatar_url,
+              follows: true,
+            });
+          } else {
+            followersList.push({
+              id,
+              first_name,
+              last_name,
+              email,
+              avatar_url,
+              follows: false,
+            });
+          }
+        })
+      );
+    }
+
+    res.status(200).json({ followers: followersList });
+  } catch (err) {
+    res
+      .status(401)
+      .json({ error: "Something went wrong, please try again later" });
+  }
+};
+
 module.exports = {
   getActivity,
   getLearnigsCount,
@@ -326,4 +431,6 @@ module.exports = {
   getAllUsersInfo,
   putfollowAndUnfollow,
   getFollowsCount,
+  getFollowing,
+  getFollowers,
 };

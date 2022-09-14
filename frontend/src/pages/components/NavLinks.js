@@ -1,8 +1,4 @@
-import {
-  UserIcon,
-  UserGroupIcon,
-  Squares2X2Icon,
-} from "@heroicons/react/24/outline";
+import { UserGroupIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
 import { Link, useLocation } from "react-router-dom";
 const NavLinks = ({ mobile }) => {
   const { pathname } = useLocation();
@@ -32,16 +28,6 @@ const NavLinks = ({ mobile }) => {
           }`}
         >
           <UserGroupIcon className="w-8 mr-2" /> Users
-        </Link>
-      </li>
-      <li>
-        <Link
-          to="/profile"
-          className={`cursor-pointer flex items-center p-2 rounded-xl trans ${
-            pathname === "/profile" && "active_nav"
-          }`}
-        >
-          <UserIcon className="w-8 mr-2" /> Profile
         </Link>
       </li>
     </ul>

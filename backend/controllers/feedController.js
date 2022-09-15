@@ -525,6 +525,75 @@ const editPassword = async (req, res, next) => {
   }
 };
 
+const getCategories = async (req, res, next) => {
+  const user_id = req.user;
+
+  try {
+    const lessons = await UserLesson.findAll({
+      where: { user_id },
+      attributes: ["quiz_id"],
+    });
+
+    const takenLessonsList = [];
+    lessons.map((lesson) => {
+      takenLessonsList.push(lesson.quiz_id);
+    });
+
+    const categories = await Quiz.findAll();
+    const result = [];
+
+    categories.map(({ id, name, description }) => {
+      if (takenLessonsList.includes(id)) {
+        result.push({
+          id,
+          name,
+          description,
+          wasTaken: true,
+        });
+      } else {
+        result.push({
+          id,
+          name,
+          description,
+          wasTaken: false,
+        });
+      }
+    });
+
+    res.status(200).json({ categories: result });
+  } catch (err) {
+    res
+      .status(401)
+      .json({ error: "Something went wrong, please try again later" });
+  }
+};
+
+const getLesson = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const questions = await Question.findAll({ where: { quiz_id: id } });
+
+    const result = [];
+
+    questions.map(
+      ({ id, title, choice_1, choice_2, choice_3, correct_answer }) => {
+        result.push({
+          id,
+          title,
+          choices: [choice_1, choice_2, choice_3, correct_answer],
+        });
+      }
+    );
+
+    res.status(200).json({ questions: result });
+  } catch (err) {
+    res
+      .status(401)
+      .json({ error: "Something went wrong, please try again later" });
+  }
+};
+
 module.exports = {
   getActivity,
   getLearnigsCount,
@@ -537,4 +606,6 @@ module.exports = {
   editPersonalInfo,
   editEmail,
   editPassword,
+  getCategories,
+  getLesson,
 };

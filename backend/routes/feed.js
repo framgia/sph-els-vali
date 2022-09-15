@@ -11,6 +11,8 @@ const {
   editPersonalInfo,
   editEmail,
   editPassword,
+  getCategories,
+  getLesson,
 } = require("../controllers/feedController");
 const isAuth = require("../middleware/isAuth");
 
@@ -39,5 +41,9 @@ router.put("/edit_personal_info", editPersonalInfo);
 router.put("/edit_email", editEmail);
 
 router.put("/edit_password", editPassword);
+
+router.get("/categories", getCategories);
+
+router.get("/categories/:id", getLesson);
 
 module.exports = router;

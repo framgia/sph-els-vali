@@ -10,6 +10,7 @@ import VerifyUser from "./pages/VerifyUser";
 import UserProfile from "./pages/UserProfile";
 import Follows from "./pages/follows/Follows";
 import EditProfile from "./pages/profileEdit/EditProfile";
+import Categories from "./pages/categories/Categories";
 
 function App() {
   const { user } = useAuthContext();
@@ -37,6 +38,10 @@ function App() {
           <Route
             path="/profile_edit/*"
             element={user ? <EditProfile /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/categories"
+            element={user ? <Categories /> : <Navigate to="/login" />}
           />
           <Route
             path="/signup"

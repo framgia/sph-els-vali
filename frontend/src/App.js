@@ -11,6 +11,7 @@ import UserProfile from "./pages/UserProfile";
 import Follows from "./pages/follows/Follows";
 import EditProfile from "./pages/profileEdit/EditProfile";
 import Categories from "./pages/categories/Categories";
+import Lesson from "./pages/lesson/Lesson";
 
 function App() {
   const { user } = useAuthContext();
@@ -42,6 +43,10 @@ function App() {
           <Route
             path="/categories"
             element={user ? <Categories /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/categories/:id"
+            element={user ? <Lesson /> : <Navigate to="/login" />}
           />
           <Route
             path="/signup"

@@ -15,6 +15,9 @@
   .btn2 {
     @apply w-32 p-2 bg-blue-600 rounded-md transition transform ease-out duration-150 active:bg-blue-500 active:scale-90 text-white;
   }
+  .btn_red {
+    @apply w-32 p-2 bg-red-600 rounded-md transition transform ease-out duration-150 active:bg-red-500 active:scale-90 text-white;
+  }
   .trans {
     @apply hover:bg-gray-100 transition-all active:bg-gray-50 ease-out duration-150;
   }

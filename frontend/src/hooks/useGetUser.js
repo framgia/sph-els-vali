@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 
 const useGetUser = (userId, dependencies) => {
-  const { user } = useAuthContext();
+  const { user, dispatch } = useAuthContext();
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(null);
@@ -23,6 +23,10 @@ const useGetUser = (userId, dependencies) => {
         setIsLoading(false);
         setError(null);
       } catch (err) {
+        if (err.response.statusText === "Unauthorized") {
+          localStorage.removeItem("user");
+          dispatch({ type: "LOGOUT" });
+        }
         setIsLoading(false);
         setError("Something went wrong, please try again later");
       }

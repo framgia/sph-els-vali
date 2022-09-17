@@ -572,11 +572,14 @@ const getLesson = async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    const questions = await Question.findAll({ where: { quiz_id: id } });
+    const { name, Questions } = await Quiz.findByPk(id, {
+      include: [Question],
+      attributes: ["name"],
+    });
 
     const result = [];
 
-    questions.map(
+    Questions.map(
       ({ id, title, choice_1, choice_2, choice_3, correct_answer }) => {
         result.push({
           id,
@@ -586,7 +589,7 @@ const getLesson = async (req, res, next) => {
       }
     );
 
-    res.status(200).json({ questions: result });
+    res.status(200).json({ questions: result, name });
   } catch (err) {
     res
       .status(401)

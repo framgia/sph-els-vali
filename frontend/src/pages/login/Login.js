@@ -1,12 +1,12 @@
-import { Link, useNavigate } from "react-router-dom";
-import LoginForm from "./components/LoginForm";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { loginInputSchema } from "../../validations/loginValidation";
+import { Link, useNavigate } from "react-router-dom";
 import UseLogin from "../../hooks/useLogin";
 import learningSvg from "../../images/learning_sketching_nd4f.svg";
-import { useState } from "react";
+import { loginInputSchema } from "../../validations/loginValidation";
 import EmailConfirmation from "./components/EmailConfirmation";
+import LoginForm from "./components/LoginForm";
 
 const Login = () => {
   const { login, error, isLoading, isResendFlag } = UseLogin();
@@ -40,6 +40,8 @@ const Login = () => {
             {error || resendError}
           </p>
         ) : null}
+
+        <h1>Changes</h1>
         {isResendFlag && (
           <LoginForm
             handleSubmit={handleSubmit}

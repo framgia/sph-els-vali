@@ -1,8 +1,6 @@
 import { CheckIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
 
-const Question = ({ currentItem }) => {
-  const [answer, setAnswer] = useState("");
+const Question = ({ currentItem, answer, setAnswer }) => {
   const optionsLabel = {
     0: "A",
     1: "B",

@@ -13,6 +13,8 @@ const {
   editPassword,
   getCategories,
   getLesson,
+  postAnswer,
+  getAnswer,
 } = require("../controllers/feedController");
 const isAuth = require("../middleware/isAuth");
 
@@ -45,5 +47,9 @@ router.put("/edit_password", editPassword);
 router.get("/categories", getCategories);
 
 router.get("/categories/:id", getLesson);
+
+router.post("/save_answer", postAnswer);
+
+router.get("/get_answer", getAnswer);
 
 module.exports = router;

@@ -37,14 +37,19 @@ const UserInfo = ({ id }) => {
             />
             <div>
               <h3 className="text-[1.8rem] font-medium">{`${userInfo?.first_name} ${userInfo?.last_name}`}</h3>
-              <div>
-                <p className="text-[1.2rem]">
-                  {learntWordsAndLessons?.learntWordsResult}
-                </p>
-                <p className="text-[1.2rem]">
-                  {learntWordsAndLessons?.learntLessonsResult}
-                </p>
-              </div>
+              {learntWordsAndLessons?.learntWordsResult && (
+                <Link
+                  className="trans p-2 rounded-md flex flex-col"
+                  to={`/learnings/${id ?? user.id}`}
+                >
+                  <p className="text-[1.2rem]">
+                    {learntWordsAndLessons?.learntWordsResult}
+                  </p>
+                  <p className="text-[1.2rem]">
+                    {learntWordsAndLessons?.learntLessonsResult}
+                  </p>
+                </Link>
+              )}
             </div>
           </div>
           <div className="flex justify-evenly text-center text-[1.2rem] font-medium select-none">

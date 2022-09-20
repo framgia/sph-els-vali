@@ -3,12 +3,15 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import { AuthContextProvider } from "./contexts/AuthContext";
+import { AnswerContextProvider } from "./contexts/AnswersContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <AuthContextProvider>
-      <App />
+      <AnswerContextProvider>
+        <App />
+      </AnswerContextProvider>
     </AuthContextProvider>
   </React.StrictMode>
 );

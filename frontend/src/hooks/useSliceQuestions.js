@@ -13,14 +13,14 @@ const useSliceQuestions = (questions) => {
 
   const nextQuestion = () => {
     if (currentIndex !== questions.length - 1) {
-      setCurrentItem(questions.slice(currentIndex + 1, currentIndex + 2));
+      setCurrentItem(questions.slice(currentIndex + 1, currentIndex + 2)[0]);
       setCurrentIndex(currentIndex + 1);
     }
   };
 
   const previousQueston = () => {
     if (currentIndex !== 0) {
-      setCurrentItem(questions.slice(currentIndex - 1, currentIndex));
+      setCurrentItem(questions.slice(currentIndex - 1, currentIndex)[0]);
       setCurrentIndex(currentIndex - 1);
     }
   };
@@ -31,7 +31,7 @@ const useSliceQuestions = (questions) => {
         await questions.map((question) => {
           shuffleChoices(question.choices);
         });
-        setCurrentItem(questions.slice(0, 1));
+        setCurrentItem(questions.slice(0, 1)[0]);
       }
     };
 

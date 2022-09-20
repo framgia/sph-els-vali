@@ -1,5 +1,10 @@
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import { useAnsersContext } from "../../hooks/useAnswersContext";
+import useGetAnswer from "../../hooks/useGetAnswer";
 import useGetLesson from "../../hooks/useGetLesson";
+import useSaveAnswer from "../../hooks/useSaveAnswer";
 import useSliceQuestions from "../../hooks/useSliceQuestions";
 import Navbar from "../components/Navbar";
 import Question from "./components/Question";
@@ -8,8 +13,74 @@ const Lesson = () => {
   const { id } = useParams();
   const { data } = useGetLesson(id);
 
+  const [answer, setAnswer] = useState("");
+
   const { nextQuestion, previousQueston, currentItem, currentIndex } =
     useSliceQuestions(data?.questions ?? []);
+
+  const { data: answerData } = useGetAnswer(Number(id));
+
+  const { saveAnswer } = useSaveAnswer();
+
+  const { answers, dispatch } = useAnsersContext();
+
+  const getAnswer = (id) => {
+    if (currentItem && id) {
+      const answ = answers.filter((m) => m.question_id === id);
+      return answ[0];
+    }
+  };
+
+  const handleNext = async () => {
+    if (answer && answer !== getAnswer(currentItem?.id)?.user_answer) {
+      await saveAnswer(currentItem?.id, answer, Number(id))
+        .then(() => {
+          dispatch({
+            type: "SAVE_ANSWER",
+            payroll: {
+              user_answer: answer,
+              question_id: currentItem?.id,
+              quiz_id: Number(id),
+            },
+          });
+          nextQuestion();
+        })
+        .catch(() => {
+          return toast.error(
+            "Could not save the answer, please try again later",
+            {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            }
+          );
+        });
+    } else {
+      nextQuestion();
+    }
+  };
+
+  useEffect(() => {
+    if (answerData) {
+      dispatch({ type: "GET ANSWERS", payroll: answerData.answers });
+    }
+  }, [answerData]);
+
+  useEffect(() => {
+    if (
+      getAnswer(currentItem?.id)?.quiz_id === Number(id) &&
+      currentItem?.id === getAnswer(currentItem?.id).question_id
+    ) {
+      setAnswer(getAnswer(currentItem?.id)?.user_answer);
+    } else {
+      setAnswer("");
+    }
+  }, [currentItem]);
 
   return (
     <div className="min-h-[100vh] w-[100%] h-[100%] flex flex-col">
@@ -22,7 +93,12 @@ const Lesson = () => {
           </header>
 
           {currentItem && (
-            <Question key={currentItem[0].id} currentItem={currentItem} />
+            <Question
+              key={currentItem?.id}
+              currentItem={currentItem}
+              answer={answer}
+              setAnswer={setAnswer}
+            />
           )}
 
           <footer className="flex justify-around select-none">
@@ -32,7 +108,7 @@ const Lesson = () => {
             >
               {"< Back"}
             </button>
-            <button onClick={() => nextQuestion()} className="btn2">
+            <button onClick={handleNext} className="btn2">
               {currentIndex + 1 === data?.questions.length
                 ? "Finish"
                 : "Next >"}
@@ -40,6 +116,17 @@ const Lesson = () => {
           </footer>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };

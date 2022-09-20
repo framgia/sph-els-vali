@@ -7,6 +7,7 @@ const {
   ActivityLog,
   Quiz,
   UserLesson,
+  UserAnswer,
   Question,
   Follow,
 } = require("../models");
@@ -324,7 +325,7 @@ const getFollowsCount = async (req, res, next) => {
     });
   } catch (err) {
     res
-      .status(401)
+      .status(400)
       .json({ error: "Something went wrong, please try again later" });
   }
 };
@@ -374,7 +375,7 @@ const getFollowing = async (req, res, next) => {
     res.status(200).json({ following: followingsList });
   } catch (err) {
     res
-      .status(401)
+      .status(400)
       .json({ error: "Something went wrong, please try again later" });
   }
 };
@@ -423,7 +424,7 @@ const getFollowers = async (req, res, next) => {
     res.status(200).json({ followers: followersList });
   } catch (err) {
     res
-      .status(401)
+      .status(400)
       .json({ error: "Something went wrong, please try again later" });
   }
 };
@@ -470,7 +471,7 @@ const editPersonalInfo = async (req, res, next) => {
       .json({ message: "User information was successfully updated!" });
   } catch (err) {
     res
-      .status(401)
+      .status(400)
       .json({ error: "Something went wrong, please try again later" });
   }
 };
@@ -492,7 +493,7 @@ const editEmail = async (req, res, next) => {
     res.status(200).json({ message: "Email was successfully updated" });
   } catch (err) {
     res
-      .status(401)
+      .status(400)
       .json({ error: "Something went wrong, please try again later" });
   }
 };
@@ -520,7 +521,7 @@ const editPassword = async (req, res, next) => {
     res.status(200).json({ message: "Password was successfully changed" });
   } catch (err) {
     res
-      .status(401)
+      .status(400)
       .json({ error: "Something went wrong, please try again later" });
   }
 };
@@ -563,7 +564,7 @@ const getCategories = async (req, res, next) => {
     res.status(200).json({ categories: result });
   } catch (err) {
     res
-      .status(401)
+      .status(400)
       .json({ error: "Something went wrong, please try again later" });
   }
 };
@@ -592,7 +593,61 @@ const getLesson = async (req, res, next) => {
     res.status(200).json({ questions: result, name });
   } catch (err) {
     res
-      .status(401)
+      .status(400)
+      .json({ error: "Something went wrong, please try again later" });
+  }
+};
+
+const postAnswer = async (req, res, next) => {
+  const user_id = req.user;
+  const { question_id, user_answer, quiz_id } = req.body;
+
+  try {
+    const answer = await UserAnswer.findOne({
+      where: { user_id, question_id, quiz_id },
+    });
+
+    if (answer) {
+      if (answer.user_answer !== user_answer) {
+        await answer.update({
+          user_answer,
+        });
+
+        return res.status(200).json({ message: "Answer updated!" });
+      } else {
+        return res.status(304).json({ error: "Answer exists!" });
+      }
+    } else {
+      await UserAnswer.create({
+        user_id,
+        question_id,
+        user_answer,
+        quiz_id,
+      });
+
+      res.status(200).json({ message: "Answer received!" });
+    }
+  } catch (err) {
+    res
+      .status(400)
+      .json({ error: "Something went wrong, please try again later" });
+  }
+};
+
+const getAnswer = async (req, res, next) => {
+  const user_id = req.user;
+  const { quiz_id } = req.query;
+
+  try {
+    const answers = await UserAnswer.findAll({
+      where: { user_id, quiz_id },
+      attributes: ["user_answer", "question_id", "quiz_id"],
+    });
+
+    res.status(200).json({ answers });
+  } catch (err) {
+    res
+      .status(400)
       .json({ error: "Something went wrong, please try again later" });
   }
 };
@@ -611,4 +666,6 @@ module.exports = {
   editPassword,
   getCategories,
   getLesson,
+  postAnswer,
+  getAnswer,
 };

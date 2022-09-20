@@ -1,8 +1,6 @@
 import { CheckIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
 
-const Question = ({ currentItem }) => {
-  const [answer, setAnswer] = useState("");
+const Question = ({ currentItem, answer, setAnswer }) => {
   const optionsLabel = {
     0: "A",
     1: "B",
@@ -12,10 +10,10 @@ const Question = ({ currentItem }) => {
 
   return (
     <div className="flex my-10 mx-auto w-[50%] justify-between">
-      <h1 className="text-[3rem]">{currentItem && currentItem[0].title}</h1>
+      <h1 className="text-[3rem]">{currentItem?.title}</h1>
       <div className="flex flex-col w-[50%] min-w-fit">
         {currentItem &&
-          currentItem[0].choices.map((choice, i) => (
+          currentItem.choices.map((choice, i) => (
             <label
               key={i}
               htmlFor={`choice_${i}`}

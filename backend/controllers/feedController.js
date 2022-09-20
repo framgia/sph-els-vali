@@ -708,7 +708,7 @@ const getResult = async (req, res, next) => {
           user_answer: null,
         });
       });
-      return res.status(404).json({ result, score });
+      return res.status(200).json({ result, score });
     }
 
     const answeredQuestionIdList = [];

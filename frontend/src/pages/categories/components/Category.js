@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Category = ({
   id,
   name,
@@ -15,9 +17,12 @@ const Category = ({
       <p className="text-[1.5rem] font-medium border-b-2">{name}</p>
       <p className="text-[1.2rem] break-all">{description}</p>
       {wasTaken ? (
-        <button className="btn text-white w-[50%] font-medium min-w-fit">
+        <Link
+          to={`/result/${id}`}
+          className="btn text-white w-[50%] font-medium min-w-fit flex justify-center"
+        >
           View Result
-        </button>
+        </Link>
       ) : (
         <button
           onClick={handleStart}

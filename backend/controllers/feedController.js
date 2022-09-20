@@ -571,8 +571,31 @@ const getCategories = async (req, res, next) => {
 
 const getLesson = async (req, res, next) => {
   const { id } = req.params;
+  const user_id = req.user;
 
   try {
+    const userlesson = await UserLesson.findOne({
+      where: { quiz_id: id, user_id },
+    });
+    const quizzActivity = await ActivityLog.findOne({
+      where: { relatable_id: id, relatable_type: "quizzes", user_id },
+    });
+
+    if (!userlesson) {
+      await UserLesson.create({
+        user_id,
+        quiz_id: id,
+        score: 0,
+      });
+    }
+    if (!quizzActivity) {
+      await ActivityLog.create({
+        relatable_id: id,
+        relatable_type: "quizzes",
+        user_id,
+      });
+    }
+
     const { name, Questions } = await Quiz.findByPk(id, {
       include: [Question],
       attributes: ["name"],
@@ -652,6 +675,94 @@ const getAnswer = async (req, res, next) => {
   }
 };
 
+const getResult = async (req, res, next) => {
+  const user_id = req.user;
+  const { quiz_id } = req.params;
+
+  try {
+    const userlesson = await UserLesson.findOne({
+      where: { quiz_id, user_id },
+    });
+
+    if (!userlesson) {
+      return res.status(404).json({ error: "Quiz was not taken" });
+    }
+
+    const quiz = await Quiz.findByPk(quiz_id, {
+      include: [
+        { model: UserAnswer, where: { user_id } },
+        { model: Question, where: { quiz_id } },
+      ],
+    });
+
+    const result = [];
+    let score = 0;
+
+    if (userlesson && !quiz) {
+      const questions = await Question.findAll({ where: { quiz_id } });
+      questions.map((question) => {
+        result.push({
+          question_id: question.id,
+          correct: false,
+          correct_answer: question.correct_answer,
+          user_answer: null,
+        });
+      });
+      return res.status(404).json({ result, score });
+    }
+
+    const answeredQuestionIdList = [];
+    quiz.UserAnswers.map((user_answer) => {
+      answeredQuestionIdList.push(user_answer.question_id);
+    });
+
+    quiz.Questions.map((question) => {
+      if (!answeredQuestionIdList.includes(question.id)) {
+        result.push({
+          question_id: question.id,
+          correct: false,
+          correct_answer: question.correct_answer,
+          user_answer: null,
+        });
+      }
+      quiz.UserAnswers.map((answer) => {
+        if (
+          answer.question_id === question.id &&
+          answer.user_answer === question.correct_answer
+        ) {
+          score += 1;
+          result.push({
+            question_id: question.id,
+            correct: true,
+            correct_answer: question.correct_answer,
+            user_answer: answer.user_answer,
+          });
+        } else if (
+          answer.question_id === question.id &&
+          answer.user_answer !== question.correct_answer
+        ) {
+          result.push({
+            question_id: question.id,
+            correct: false,
+            correct_answer: question.correct_answer,
+            user_answer: answer.user_answer,
+          });
+        }
+      });
+    });
+
+    if (userlesson !== score) {
+      await userlesson.update({ score });
+    }
+
+    res.status(200).json({ result, score });
+  } catch (err) {
+    res
+      .status(400)
+      .json({ error: "Something went wrong, please try again later" });
+  }
+};
+
 module.exports = {
   getActivity,
   getLearnigsCount,
@@ -668,4 +779,5 @@ module.exports = {
   getLesson,
   postAnswer,
   getAnswer,
+  getResult,
 };

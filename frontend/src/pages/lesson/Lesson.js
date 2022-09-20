@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { useAnsersContext } from "../../hooks/useAnswersContext";
 import useGetAnswer from "../../hooks/useGetAnswer";
@@ -7,6 +7,7 @@ import useGetLesson from "../../hooks/useGetLesson";
 import useSaveAnswer from "../../hooks/useSaveAnswer";
 import useSliceQuestions from "../../hooks/useSliceQuestions";
 import Navbar from "../components/Navbar";
+import HeaderSection from "./components/HeaderSection";
 import Question from "./components/Question";
 
 const Lesson = () => {
@@ -31,10 +32,15 @@ const Lesson = () => {
     }
   };
 
+  const navigate = useNavigate();
+
   const handleNext = async () => {
     if (answer && answer !== getAnswer(currentItem?.id)?.user_answer) {
       await saveAnswer(currentItem?.id, answer, Number(id))
         .then(() => {
+          if (currentIndex + 1 === data?.questions.length) {
+            return navigate(`/result/${id}`);
+          }
           dispatch({
             type: "SAVE_ANSWER",
             payroll: {
@@ -61,6 +67,9 @@ const Lesson = () => {
           );
         });
     } else {
+      if (currentIndex + 1 === data?.questions.length) {
+        return navigate(`/result/${id}`);
+      }
       nextQuestion();
     }
   };
@@ -87,10 +96,11 @@ const Lesson = () => {
       <Navbar />
       <div className=" flex-grow flex flex-col sm:w-[80%] lg:w-[60%] mx-auto py-8 space-y-1 justify-center">
         <div className="bg-white p-2 rounded-md shadow-md">
-          <header className="flex justify-between text-[2rem] border-b-2 px-10 py-3">
-            <h2 className="font-medium">{data?.name}</h2>
-            <p>{`${currentIndex + 1}/${data?.questions.length}`}</p>
-          </header>
+          <HeaderSection
+            current={currentIndex + 1}
+            all={data?.questions.length}
+            title={data?.name}
+          />
 
           {currentItem && (
             <Question

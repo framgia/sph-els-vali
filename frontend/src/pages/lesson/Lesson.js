@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import { useAnsersContext } from "../../hooks/useAnswersContext";
 import useGetAnswer from "../../hooks/useGetAnswer";
 import useGetLesson from "../../hooks/useGetLesson";
 import useSaveAnswer from "../../hooks/useSaveAnswer";
@@ -17,17 +18,31 @@ const Lesson = () => {
   const { nextQuestion, previousQueston, currentItem, currentIndex } =
     useSliceQuestions(data?.questions ?? []);
 
-  const { data: answerData } = useGetAnswer(
-    currentItem && currentItem[0].id,
-    Number(id)
-  );
+  const { data: answerData } = useGetAnswer(Number(id));
 
   const { saveAnswer } = useSaveAnswer();
 
+  const { answers, dispatch } = useAnsersContext();
+
+  const getAnswer = (id) => {
+    if (currentItem && id) {
+      const answ = answers.filter((m) => m.question_id === id);
+      return answ[0];
+    }
+  };
+
   const handleNext = async () => {
-    if (answer && answer !== answerData?.user_answer) {
-      await saveAnswer(currentItem[0].id, answer, Number(id))
+    if (answer && answer !== getAnswer(currentItem?.id)?.user_answer) {
+      await saveAnswer(currentItem?.id, answer, Number(id))
         .then(() => {
+          dispatch({
+            type: "SAVE_ANSWER",
+            payroll: {
+              user_answer: answer,
+              question_id: currentItem?.id,
+              quiz_id: Number(id),
+            },
+          });
           nextQuestion();
         })
         .catch(() => {
@@ -51,14 +66,21 @@ const Lesson = () => {
   };
 
   useEffect(() => {
-    if (answerData && currentItem && answerData.quiz_id === Number(id)) {
-      if (currentItem[0].id === answerData.question_id) {
-        setAnswer(answerData.user_answer);
-      } else {
-        setAnswer("");
-      }
+    if (answerData) {
+      dispatch({ type: "GET ANSWERS", payroll: answerData.answers });
     }
-  }, [currentItem, answerData]);
+  }, [answerData]);
+
+  useEffect(() => {
+    if (
+      getAnswer(currentItem?.id)?.quiz_id === Number(id) &&
+      currentItem?.id === getAnswer(currentItem?.id).question_id
+    ) {
+      setAnswer(getAnswer(currentItem?.id)?.user_answer);
+    } else {
+      setAnswer("");
+    }
+  }, [currentItem]);
 
   return (
     <div className="min-h-[100vh] w-[100%] h-[100%] flex flex-col">
@@ -72,7 +94,7 @@ const Lesson = () => {
 
           {currentItem && (
             <Question
-              key={currentItem[0].id}
+              key={currentItem?.id}
               currentItem={currentItem}
               answer={answer}
               setAnswer={setAnswer}

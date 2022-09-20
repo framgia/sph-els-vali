@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 
-const useGetAnswer = (question_id, quiz_id) => {
+const useGetAnswer = (quiz_id) => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(null);
@@ -18,7 +18,6 @@ const useGetAnswer = (question_id, quiz_id) => {
         `${process.env.REACT_APP_BACKEND_URL}/get_answer`,
         {
           params: {
-            question_id,
             quiz_id,
           },
         }
@@ -36,7 +35,7 @@ const useGetAnswer = (question_id, quiz_id) => {
     if (user) {
       GetAnswer();
     }
-  }, [question_id, quiz_id]);
+  }, [quiz_id]);
 
   return { data, error, isLoading };
 };

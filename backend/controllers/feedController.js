@@ -636,21 +636,15 @@ const postAnswer = async (req, res, next) => {
 
 const getAnswer = async (req, res, next) => {
   const user_id = req.user;
-  const { question_id, quiz_id } = req.query;
+  const { quiz_id } = req.query;
 
   try {
-    const answer = await UserAnswer.findOne({
-      where: { user_id, question_id, quiz_id },
+    const answers = await UserAnswer.findAll({
+      where: { user_id, quiz_id },
+      attributes: ["user_answer", "question_id", "quiz_id"],
     });
-    if (!answer) {
-      return res.status(404).json({ error: "Not Answered" });
-    }
 
-    res.status(200).json({
-      user_answer: answer.user_answer,
-      question_id: answer.question_id,
-      quiz_id: answer.quiz_id,
-    });
+    res.status(200).json({ answers });
   } catch (err) {
     res
       .status(400)

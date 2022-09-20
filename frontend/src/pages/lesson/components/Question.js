@@ -10,10 +10,10 @@ const Question = ({ currentItem, answer, setAnswer }) => {
 
   return (
     <div className="flex my-10 mx-auto w-[50%] justify-between">
-      <h1 className="text-[3rem]">{currentItem && currentItem[0].title}</h1>
+      <h1 className="text-[3rem]">{currentItem?.title}</h1>
       <div className="flex flex-col w-[50%] min-w-fit">
         {currentItem &&
-          currentItem[0].choices.map((choice, i) => (
+          currentItem.choices.map((choice, i) => (
             <label
               key={i}
               htmlFor={`choice_${i}`}

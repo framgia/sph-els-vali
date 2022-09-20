@@ -763,6 +763,52 @@ const getResult = async (req, res, next) => {
   }
 };
 
+const getLearntWords = async (req, res, next) => {
+  const { user_id } = req.params;
+
+  try {
+    const lessons = await UserLesson.findAll({
+      where: { user_id },
+      attributes: ["quiz_id"],
+    });
+
+    const lessons_array = [];
+
+    if (lessons.length > 0) {
+      lessons.map((lesson) => {
+        if (!lessons_array.includes(lesson.quiz_id)) {
+          lessons_array.push(lesson.quiz_id);
+        }
+      });
+    }
+
+    const result = [];
+
+    const quizzes = await Quiz.findAll({
+      where: { id: lessons_array },
+      attributes: ["name", "id"],
+      include: [{ model: Question, attributes: ["correct_answer", "title"] }],
+    });
+
+    quizzes.map((quiz) => {
+      result.push({
+        id: quiz.id,
+        name: quiz.name,
+        words: quiz.Questions.map((question) => ({
+          word: question.title,
+          answer: question.correct_answer,
+        })),
+      });
+    });
+
+    res.status(200).json({ result });
+  } catch (err) {
+    res
+      .status(400)
+      .json({ error: "Something went wrong, please try again later" });
+  }
+};
+
 module.exports = {
   getActivity,
   getLearnigsCount,
@@ -780,4 +826,5 @@ module.exports = {
   postAnswer,
   getAnswer,
   getResult,
+  getLearntWords,
 };

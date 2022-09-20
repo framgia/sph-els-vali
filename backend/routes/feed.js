@@ -15,6 +15,7 @@ const {
   getLesson,
   postAnswer,
   getAnswer,
+  getResult,
 } = require("../controllers/feedController");
 const isAuth = require("../middleware/isAuth");
 
@@ -51,5 +52,7 @@ router.get("/categories/:id", getLesson);
 router.post("/save_answer", postAnswer);
 
 router.get("/get_answer", getAnswer);
+
+router.get("/get_result/:quiz_id", getResult);
 
 module.exports = router;

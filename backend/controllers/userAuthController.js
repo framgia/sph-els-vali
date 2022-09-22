@@ -132,4 +132,5 @@ module.exports = {
   resendConfirmation,
   login,
   sendEmailConfirmation,
+  createJWTToken,
 };

@@ -4,6 +4,7 @@ const cors = require("cors");
 const path = require("path");
 const db = require("./models/index");
 const userAuthRouter = require("./routes/userAuth");
+const adminAuthRouter = require("./routes/adminAuth");
 const feedRouter = require("./routes/feed");
 const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
@@ -39,6 +40,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(multer({ storage: fileStorage, fileFilter }).single("avatar_url"));
 
 app.use(userAuthRouter);
+app.use(adminAuthRouter);
 app.use(feedRouter);
 
 // check if connection with database is successful

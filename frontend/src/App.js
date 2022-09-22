@@ -13,6 +13,7 @@ import EditProfile from "./pages/profileEdit/EditProfile";
 import Categories from "./pages/categories/Categories";
 import Lesson from "./pages/lesson/Lesson";
 import Result from "./pages/result/Result";
+import Learnings from "./pages/learnings/Learnings";
 
 function App() {
   const { user } = useAuthContext();
@@ -52,6 +53,10 @@ function App() {
           <Route
             path="/result/:id"
             element={user ? <Result /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/learnings/:id"
+            element={user ? <Learnings /> : <Navigate to="/login" />}
           />
           <Route
             path="/signup"

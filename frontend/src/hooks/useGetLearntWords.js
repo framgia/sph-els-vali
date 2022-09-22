@@ -2,26 +2,25 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 
-const useGetLesson = (id) => {
+const useGetLearntWords = (id) => {
   const { user } = useAuthContext();
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(null);
-  let isCalled = false;
 
-  const getLesson = async () => {
+  const getLearntWords = async () => {
     setIsLoading(true);
     setError(null);
-    isCalled = true;
+
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/categories/${id}`,
+        `${process.env.REACT_APP_BACKEND_URL}/learnt_words/${id}`,
         {
           headers: { Authorization: `Bearer ${user.token}` },
         }
       );
 
-      setData(res.data);
+      setData(res.data.result);
       setIsLoading(false);
       setError(null);
     } catch (err) {
@@ -31,12 +30,12 @@ const useGetLesson = (id) => {
   };
 
   useEffect(() => {
-    if (user && !isCalled) {
-      getLesson();
+    if (user) {
+      getLearntWords();
     }
   }, [user]);
 
   return { error, isLoading, data };
 };
 
-export default useGetLesson;
+export default useGetLearntWords;

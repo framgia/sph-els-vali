@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import useGetLesson from "../../hooks/useGetLesson";
+import useGetQuestions from "../../hooks/useGetQuestions";
 import useGetResult from "../../hooks/useGetResult";
 import Navbar from "../components/Navbar";
 import HeaderSection from "../lesson/components/HeaderSection";
@@ -7,7 +7,7 @@ import BodySection from "./components/BodySection";
 
 const Result = () => {
   const { id } = useParams();
-  const { data } = useGetLesson(id);
+  const { data } = useGetQuestions(id);
   const { data: resultData } = useGetResult(id);
 
   return (

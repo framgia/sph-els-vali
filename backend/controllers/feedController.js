@@ -535,21 +535,33 @@ const getCategories = async (req, res, next) => {
       attributes: ["quiz_id"],
     });
 
+    const answers = await UserAnswer.findAll({
+      where: { user_id, correct: true },
+    });
+
     const takenLessonsList = [];
     lessons.map((lesson) => {
       takenLessonsList.push(lesson.quiz_id);
     });
 
-    const categories = await Quiz.findAll();
+    const categories = await Quiz.findAll({ include: [Question] });
     const result = [];
 
-    categories.map(({ id, name, description }) => {
+    categories.map(({ id, name, description, Questions }) => {
       if (takenLessonsList.includes(id)) {
+        let score = 0;
+        answers.map((answer) => {
+          if (answer.quiz_id === id) {
+            score++;
+          }
+        });
         result.push({
           id,
           name,
           description,
           wasTaken: true,
+          score,
+          questionsCount: Questions.length,
         });
       } else {
         result.push({
@@ -557,6 +569,8 @@ const getCategories = async (req, res, next) => {
           name,
           description,
           wasTaken: false,
+          score: null,
+          questionsCount: Questions.length,
         });
       }
     });
@@ -577,9 +591,15 @@ const getLesson = async (req, res, next) => {
     const userlesson = await UserLesson.findOne({
       where: { quiz_id: id, user_id },
     });
-    const quizzActivity = await ActivityLog.findOne({
-      where: { relatable_id: id, relatable_type: "quizzes", user_id },
+    const userAnwers = await UserAnswer.findAll({
+      where: { quiz_id: id, user_id },
     });
+
+    if (userAnwers.length > 0) {
+      await UserAnswer.destroy({
+        where: { quiz_id: id, user_id },
+      });
+    }
 
     if (!userlesson) {
       await UserLesson.create({
@@ -587,15 +607,47 @@ const getLesson = async (req, res, next) => {
         quiz_id: id,
         score: 0,
       });
-    }
-    if (!quizzActivity) {
-      await ActivityLog.create({
-        relatable_id: id,
-        relatable_type: "quizzes",
-        user_id,
+    } else {
+      await userlesson.update({
+        score: 0,
       });
     }
 
+    await ActivityLog.create({
+      relatable_id: id,
+      relatable_type: "quizzes",
+      user_id,
+    });
+
+    const { name, Questions } = await Quiz.findByPk(id, {
+      include: [Question],
+      attributes: ["name"],
+    });
+
+    const result = [];
+
+    Questions.map(
+      ({ id, title, choice_1, choice_2, choice_3, correct_answer }) => {
+        result.push({
+          id,
+          title,
+          choices: [choice_1, choice_2, choice_3, correct_answer],
+        });
+      }
+    );
+
+    res.status(200).json({ questions: result, name });
+  } catch (err) {
+    res
+      .status(400)
+      .json({ error: "Something went wrong, please try again later" });
+  }
+};
+
+const getQuestions = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
     const { name, Questions } = await Quiz.findByPk(id, {
       include: [Question],
       attributes: ["name"],
@@ -630,23 +682,46 @@ const postAnswer = async (req, res, next) => {
       where: { user_id, question_id, quiz_id },
     });
 
+    const question = await Question.findOne({
+      where: { id: question_id, quiz_id },
+    });
+
     if (answer) {
       if (answer.user_answer !== user_answer) {
-        await answer.update({
-          user_answer,
-        });
+        if (user_answer === question.correct_answer) {
+          await answer.update({
+            user_answer,
+            correct: true,
+          });
+        } else {
+          await answer.update({
+            user_answer,
+            correct: false,
+          });
+        }
 
         return res.status(200).json({ message: "Answer updated!" });
       } else {
         return res.status(304).json({ error: "Answer exists!" });
       }
     } else {
-      await UserAnswer.create({
-        user_id,
-        question_id,
-        user_answer,
-        quiz_id,
-      });
+      if (user_answer === question.correct_answer) {
+        await UserAnswer.create({
+          user_id,
+          question_id,
+          user_answer,
+          quiz_id,
+          correct: true,
+        });
+      } else {
+        await UserAnswer.create({
+          user_id,
+          question_id,
+          user_answer,
+          quiz_id,
+          correct: false,
+        });
+      }
 
       res.status(200).json({ message: "Answer received!" });
     }
@@ -787,17 +862,33 @@ const getLearntWords = async (req, res, next) => {
     const quizzes = await Quiz.findAll({
       where: { id: lessons_array },
       attributes: ["name", "id"],
-      include: [{ model: Question, attributes: ["correct_answer", "title"] }],
+      include: [
+        { model: Question, attributes: ["correct_answer", "title", "id"] },
+        { model: UserAnswer, where: { user_id, correct: true } },
+      ],
     });
 
     quizzes.map((quiz) => {
       result.push({
         id: quiz.id,
         name: quiz.name,
-        words: quiz.Questions.map((question) => ({
-          word: question.title,
-          answer: question.correct_answer,
-        })),
+        words: quiz.UserAnswers.map((u) => {
+          let word;
+          quiz.Questions.map((question) => {
+            if (
+              u.quiz_id === quiz.id &&
+              question.id === u.question_id &&
+              question.correct_answer === u.user_answer
+            ) {
+              word = {
+                word: question.title,
+                answer: question.correct_answer,
+              };
+            }
+          });
+
+          return word;
+        }),
       });
     });
 
@@ -827,4 +918,5 @@ module.exports = {
   getAnswer,
   getResult,
   getLearntWords,
+  getQuestions,
 };

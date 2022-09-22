@@ -16,6 +16,7 @@ const Categories = () => {
     setShowPopup(false);
     setSelectedLessonId(null);
   };
+
   return (
     <div className="min-h-[100vh] w-[100%] h-[100%] flex flex-col">
       {showPopup && (
@@ -56,17 +57,21 @@ const Categories = () => {
         )}
 
         <div className="w-[100%] grid lg:grid-cols-3 md:grid-cols-2 gap-5">
-          {data?.map(({ id, name, description, wasTaken }) => (
-            <Category
-              key={id}
-              id={id}
-              name={name}
-              description={description}
-              wasTaken={wasTaken}
-              setSelectedLessonId={setSelectedLessonId}
-              setShowPopup={setShowPopup}
-            />
-          ))}
+          {data?.map(
+            ({ id, name, description, wasTaken, questionsCount, score }) => (
+              <Category
+                key={id}
+                id={id}
+                name={name}
+                description={description}
+                wasTaken={wasTaken}
+                questionsCount={questionsCount}
+                score={score}
+                setSelectedLessonId={setSelectedLessonId}
+                setShowPopup={setShowPopup}
+              />
+            )
+          )}
         </div>
       </div>
     </div>

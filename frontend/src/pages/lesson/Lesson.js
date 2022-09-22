@@ -13,7 +13,6 @@ import Question from "./components/Question";
 const Lesson = () => {
   const { id } = useParams();
   const { data } = useGetLesson(id);
-
   const [answer, setAnswer] = useState("");
 
   const { nextQuestion, previousQueston, currentItem, currentIndex } =

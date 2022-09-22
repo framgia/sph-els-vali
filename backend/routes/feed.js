@@ -17,6 +17,7 @@ const {
   getAnswer,
   getResult,
   getLearntWords,
+  getQuestions,
 } = require("../controllers/feedController");
 const isAuth = require("../middleware/isAuth");
 
@@ -49,6 +50,8 @@ router.put("/edit_password", editPassword);
 router.get("/categories", getCategories);
 
 router.get("/categories/:id", getLesson);
+
+router.get("/questions/:id", getQuestions);
 
 router.post("/save_answer", postAnswer);
 

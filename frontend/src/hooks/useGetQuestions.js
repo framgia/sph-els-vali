@@ -2,20 +2,19 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 
-const useGetLesson = (id) => {
+const useGetQuestions = (id) => {
   const { user } = useAuthContext();
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(null);
-  let isCalled = false;
 
-  const getLesson = async () => {
+  const getQuestions = async () => {
     setIsLoading(true);
     setError(null);
-    isCalled = true;
+
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/categories/${id}`,
+        `${process.env.REACT_APP_BACKEND_URL}/questions/${id}`,
         {
           headers: { Authorization: `Bearer ${user.token}` },
         }
@@ -31,12 +30,12 @@ const useGetLesson = (id) => {
   };
 
   useEffect(() => {
-    if (user && !isCalled) {
-      getLesson();
+    if (user) {
+      getQuestions();
     }
   }, [user]);
 
   return { error, isLoading, data };
 };
 
-export default useGetLesson;
+export default useGetQuestions;

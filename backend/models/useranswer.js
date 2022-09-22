@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       question_id: DataTypes.INTEGER,
       user_answer: DataTypes.STRING,
       quiz_id: DataTypes.INTEGER,
+      correct: DataTypes.BOOLEAN,
     },
     {
       sequelize,

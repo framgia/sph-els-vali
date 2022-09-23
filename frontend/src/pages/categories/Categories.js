@@ -55,6 +55,11 @@ const Categories = () => {
             <p>Something went wrong</p>{" "}
           </div>
         )}
+        {!data?.length > 0 && (
+          <p className="mx-auto w-fit text-[1.2rem] p-2 italic">
+            No categories yet
+          </p>
+        )}
 
         <div className="w-[100%] grid lg:grid-cols-3 md:grid-cols-2 gap-5">
           {data?.map(

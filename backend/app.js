@@ -6,6 +6,7 @@ const db = require("./models/index");
 const userAuthRouter = require("./routes/userAuth");
 const adminAuthRouter = require("./routes/adminAuth");
 const feedRouter = require("./routes/feed");
+const adminApi = require("./routes/adminApi");
 const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
 
@@ -42,6 +43,7 @@ app.use(multer({ storage: fileStorage, fileFilter }).single("avatar_url"));
 app.use(userAuthRouter);
 app.use(adminAuthRouter);
 app.use(feedRouter);
+app.use(adminApi);
 
 // check if connection with database is successful
 db.sequelize

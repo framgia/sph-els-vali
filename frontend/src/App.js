@@ -14,6 +14,8 @@ import Categories from "./pages/categories/Categories";
 import Lesson from "./pages/lesson/Lesson";
 import Result from "./pages/result/Result";
 import Learnings from "./pages/learnings/Learnings";
+import AdminLogin from "./pages/adminLogin/AdminLogin";
+import AdminCategories from "./pages/adminCategories/AdminCategories";
 
 function App() {
   const { user } = useAuthContext();
@@ -59,6 +61,12 @@ function App() {
             element={user ? <Learnings /> : <Navigate to="/login" />}
           />
           <Route
+            path="/admin/categories"
+            element={
+              user ? <AdminCategories /> : <Navigate to="/admin/login" />
+            }
+          />
+          <Route
             path="/signup"
             element={!user ? <Signup /> : <Navigate to="/" />}
           />
@@ -71,6 +79,18 @@ function App() {
                 <Navigate to={prevPath} />
               ) : (
                 <Navigate to="/" />
+              )
+            }
+          />
+          <Route
+            path="/admin/login"
+            element={
+              !user ? (
+                <AdminLogin />
+              ) : prevPath ? (
+                <Navigate to={prevPath} />
+              ) : (
+                <Navigate to="/admin/categories" />
               )
             }
           />

@@ -14,6 +14,7 @@ const isAuth = async (req, res, next) => {
 
     const user = await User.findByPk(id);
     req.user = user.id;
+    req.isAdmin = user.admin;
 
     next();
   } catch (err) {

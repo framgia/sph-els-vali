@@ -32,27 +32,29 @@ const getActivities = async (currentUserId, targetUserId) => {
     await Promise.all(
       user.ActivityLogs.map(async (activity) => {
         if (activity.relatable_type === "quizzes") {
-          await Quiz.findByPk(activity.relatable_id).then((quiz) => {
-            if (currentUserId === targetUserId) {
-              result = [
-                ...result,
-                {
-                  activity: `You learnt ${quiz.name}`,
-                  avatar_url: user.avatar_url,
-                  timestamp: activity.updatedAt,
-                },
-              ];
-            } else {
-              result = [
-                ...result,
-                {
-                  activity: `${user.first_name} learnt ${quiz.name}`,
-                  avatar_url: user.avatar_url,
-                  timestamp: activity.updatedAt,
-                },
-              ];
+          await Quiz.findByPk(activity.relatable_id, { paranoid: false }).then(
+            (quiz) => {
+              if (currentUserId === targetUserId) {
+                result = [
+                  ...result,
+                  {
+                    activity: `You learnt ${quiz.name}`,
+                    avatar_url: user.avatar_url,
+                    timestamp: activity.updatedAt,
+                  },
+                ];
+              } else {
+                result = [
+                  ...result,
+                  {
+                    activity: `${user.first_name} learnt ${quiz.name}`,
+                    avatar_url: user.avatar_url,
+                    timestamp: activity.updatedAt,
+                  },
+                ];
+              }
             }
-          });
+          );
         } else if (activity.relatable_type === "follows") {
           const id = await Follow.findByPk(activity.relatable_id, {
             attributes: ["following_id"],
@@ -120,11 +122,12 @@ const getLearntWordsAndLessons = async (targetUserId) => {
 
     await Promise.all(
       user.UserLessons.map(async (lesson) => {
-        await Quiz.findByPk(lesson.quiz_id, { include: [Question] }).then(
-          (quiz) => {
-            numberOfWords += quiz.Questions.length;
-          }
-        );
+        await Quiz.findByPk(lesson.quiz_id, {
+          include: [Question],
+          paranoid: false,
+        }).then((quiz) => {
+          numberOfWords += quiz.Questions.length;
+        });
       })
     );
     return numberOfWords > 0
@@ -866,6 +869,7 @@ const getLearntWords = async (req, res, next) => {
         { model: Question, attributes: ["correct_answer", "title", "id"] },
         { model: UserAnswer, where: { user_id, correct: true } },
       ],
+      paranoid: false,
     });
 
     quizzes.map((quiz) => {

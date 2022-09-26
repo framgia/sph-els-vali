@@ -7,6 +7,7 @@ const {
   postCategory,
   postQuestion,
   deleteQuestion,
+  editQuestion,
 } = require("../controllers/adminApiController");
 
 const router = express.Router();
@@ -47,5 +48,17 @@ router.post(
 );
 
 router.delete("/admin/questions/delete/:id", deleteQuestion);
+
+router.put(
+  "/admin/questions/edit/:id",
+  [
+    body("title", "Invalid title").trim().isLength({ min: 1 }),
+    body("choice_1", "Invalid choice").trim().isLength({ min: 1 }),
+    body("choice_2", "Invalid choice").trim().isLength({ min: 1 }),
+    body("choice_3", "Invalid choice").trim().isLength({ min: 1 }),
+    body("correct_answer", "Invalid answer").trim().isLength({ min: 1 }),
+  ],
+  editQuestion
+);
 
 module.exports = router;

@@ -5,15 +5,19 @@ const MainSection = ({ item }) => {
       <div className="flex space-x-5 justify-between">
         <div>
           <h4 className="text-[1.1rem] font-medium">Word</h4>
-          {item.words.map(({ word }, i) => (
-            <p key={i}>{word}</p>
-          ))}
+          {item.words
+            .filter((word) => word !== null)
+            .map(({ word }, i) => (
+              <p key={i}>{word}</p>
+            ))}
         </div>
         <div>
           <h4 className="text-[1.1rem] font-medium">Answer</h4>
-          {item.words.map(({ answer }, i) => (
-            <p key={i}>{answer}</p>
-          ))}
+          {item.words
+            .filter((word) => word !== null)
+            .map(({ answer }, i) => (
+              <p key={i}>{answer}</p>
+            ))}
         </div>
       </div>
     </div>

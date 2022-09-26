@@ -557,7 +557,10 @@ const getCategories = async (req, res, next) => {
         answers
           .filter((answer) => answer.Question !== null)
           .map((answer) => {
-            if (answer.quiz_id === id) {
+            if (
+              answer.quiz_id === id &&
+              answer.user_answer === answer.Question.correct_answer
+            ) {
               score++;
             }
           });

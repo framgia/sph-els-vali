@@ -9,11 +9,12 @@ import { useAuthContext } from "../../hooks/useAuthContext";
 import useGetUser from "../../hooks/useGetUser";
 import HeaderSection from "./components/HeaderSection";
 import usePutPersonalInfo from "../../hooks/usePutPersonalInfo";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 import usePutEmail from "../../hooks/usePutEmail";
 import usePutPassword from "../../hooks/usePutPassword";
+import { toastError, toastSuccess } from "../../utils/toast";
 
 const EditProfile = () => {
   const { user, dispatch } = useAuthContext();
@@ -26,32 +27,6 @@ const EditProfile = () => {
   const { data } = useGetUser(user.id, forceUpdate);
 
   const [image, setImage] = useState("");
-
-  const toastSuccess = (message) => {
-    return toast.success(message, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
-  };
-
-  const toastError = (message) => {
-    return toast.error(message, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
-  };
 
   const onPersonalInfoSubmit = async ({ first_name, last_name }) => {
     await putPersonalInfo(first_name, last_name, image)

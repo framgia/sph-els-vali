@@ -46,4 +46,22 @@ const editCategory = async (req, res, next) => {
   }
 };
 
-module.exports = { deleteCategory, editCategory };
+const getCategory = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const quiz = await Quiz.findByPk(id);
+
+    if (!quiz) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+
+    res.status(200).json({ name: quiz.name, description: quiz.description });
+  } catch (err) {
+    res
+      .status(400)
+      .json({ error: "Something went wrong, please try again later" });
+  }
+};
+
+module.exports = { deleteCategory, editCategory, getCategory };

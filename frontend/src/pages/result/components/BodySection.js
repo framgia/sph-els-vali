@@ -46,7 +46,7 @@ const BodySection = ({ question, user_answer, correct_answer, correct }) => {
                   ) : (
                     <XMarkIcon className="w-9 rounded-[100%] p-1 border text-red-700 bg-white" />
                   )
-                ) : correct_answer == choice &&
+                ) : correct_answer === choice &&
                   user_answer !== correct_answer ? (
                   <CheckIcon className="w-9 rounded-[100%] p-1 border text-green-700 bg-white" />
                 ) : (
@@ -55,7 +55,7 @@ const BodySection = ({ question, user_answer, correct_answer, correct }) => {
                   </p>
                 )}
 
-                <p className="">{choice}</p>
+                <p>{choice}</p>
               </label>
             ))}
         </div>

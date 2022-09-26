@@ -16,6 +16,7 @@ import Result from "./pages/result/Result";
 import Learnings from "./pages/learnings/Learnings";
 import AdminLogin from "./pages/adminLogin/AdminLogin";
 import AdminCategories from "./pages/adminCategories/AdminCategories";
+import EditCategory from "./pages/editCategory/EditCategory";
 
 function App() {
   const { user } = useAuthContext();
@@ -65,6 +66,10 @@ function App() {
             element={
               user ? <AdminCategories /> : <Navigate to="/admin/login" />
             }
+          />
+          <Route
+            path="/admin/categories/edit/:id"
+            element={user ? <EditCategory /> : <Navigate to="/admin/login" />}
           />
           <Route
             path="/signup"

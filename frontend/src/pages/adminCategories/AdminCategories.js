@@ -7,7 +7,7 @@ import HeaderSection from "./components/HeaderSection";
 const AdminCategories = () => {
   const [forceUpdate, setForceupdate] = useState(false);
   const { data } = useGetCategories(forceUpdate);
- 
+
   return (
     <div className="min-h-[100vh] w-[100%] h-[100%] flex flex-col">
       <AdminNavbar />

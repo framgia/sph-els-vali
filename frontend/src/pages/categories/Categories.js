@@ -63,19 +63,20 @@ const Categories = () => {
 
         <div className="w-[100%] grid lg:grid-cols-3 md:grid-cols-2 gap-5">
           {data?.map(
-            ({ id, name, description, wasTaken, questionsCount, score }) => (
-              <Category
-                key={id}
-                id={id}
-                name={name}
-                description={description}
-                wasTaken={wasTaken}
-                questionsCount={questionsCount}
-                score={score}
-                setSelectedLessonId={setSelectedLessonId}
-                setShowPopup={setShowPopup}
-              />
-            )
+            ({ id, name, description, wasTaken, questionsCount, score }) =>
+              questionsCount > 0 && (
+                <Category
+                  key={id}
+                  id={id}
+                  name={name}
+                  description={description}
+                  wasTaken={wasTaken}
+                  questionsCount={questionsCount}
+                  score={score}
+                  setSelectedLessonId={setSelectedLessonId}
+                  setShowPopup={setShowPopup}
+                />
+              )
           )}
         </div>
       </div>

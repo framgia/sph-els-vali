@@ -22,6 +22,11 @@ const EditQuestionsSection = () => {
           correct_answer={correct_answer}
         />
       ))}
+      {!data?.questions.length > 0 && (
+        <p className="p-2 w-fit mx-auto text-[1.2rem] italic">
+          No questions yet
+        </p>
+      )}
     </div>
   );
 };

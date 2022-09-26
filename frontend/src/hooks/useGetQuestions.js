@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 
-const useGetQuestions = (id) => {
+const useGetQuestions = (id, forceUpdate) => {
   const { user } = useAuthContext();
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -33,7 +33,7 @@ const useGetQuestions = (id) => {
     if (user) {
       getQuestions();
     }
-  }, [user]);
+  }, [user, forceUpdate]);
 
   return { error, isLoading, data };
 };

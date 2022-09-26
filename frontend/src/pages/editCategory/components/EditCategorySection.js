@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import useGetCategory from "../../../hooks/useGetCategory";
-import TextareaAutosize from "react-textarea-autosize";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CategoryInfoSchema } from "../../../validations/categoryInfoValidation";
@@ -9,6 +8,7 @@ import usePutCategory from "../../../hooks/usePutCategory";
 import { toastError, toastSuccess } from "../../../utils/toast";
 import { ToastContainer } from "react-toastify";
 import GrayedOutBtn from "../../components/GrayedOutBtn";
+import CategoryInputs from "../../components/CategoryInputs";
 
 const EditCategorySection = () => {
   const { id } = useParams();
@@ -55,29 +55,8 @@ const EditCategorySection = () => {
       className="flex flex-col w-[50%] space-y-5 bg-white p-10 h-fit rounded-md min-w-fit"
     >
       <h1 className="border-b p-2 text-[1.8rem] font-medium">Category Info</h1>
-      <div className="flex flex-col">
-        <label htmlFor="name">Name</label>
-        <input
-          type="text"
-          name="name"
-          className="border p-1"
-          {...register("name")}
-        />
-        <p className="text-red-600">{errors.name && "Name is required."}</p>
-      </div>
+      <CategoryInputs register={register} errors={errors} />
 
-      <div className="flex flex-col">
-        <label htmlFor="description">Description</label>
-        <TextareaAutosize
-          type="text"
-          name="description"
-          className="border p-2"
-          {...register("description")}
-        />
-        <p className="text-red-600">
-          {errors.description && "Description is required."}
-        </p>
-      </div>
       <GrayedOutBtn type="submit" text="Save" array={dirtyFields} />
 
       <ToastContainer

@@ -4,6 +4,7 @@ const {
   deleteCategory,
   editCategory,
   getCategory,
+  postCategory,
 } = require("../controllers/adminApiController");
 
 const router = express.Router();
@@ -20,5 +21,14 @@ router.put(
 );
 
 router.get("/category/:id", getCategory);
+
+router.post(
+  "/admin/categories/add",
+  [
+    body("name", "Invalid name").trim().isLength({ min: 1 }),
+    body("description", "Invalid description").trim().isLength({ min: 1 }),
+  ],
+  postCategory
+);
 
 module.exports = router;

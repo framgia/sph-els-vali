@@ -125,10 +125,30 @@ const postQuestion = async (req, res, next) => {
   }
 };
 
+const deleteQuestion = async (req, res, next) => {
+  const isAdmin = req.isAdmin;
+  const { id } = req.params;
+
+  try {
+    if (!isAdmin) {
+      return res.status(403).json({ error: "You are not an admin" });
+    }
+
+    await Question.destroy({ where: { id } });
+
+    res.status(200).json({ message: "Question was successfully deleted" });
+  } catch (err) {
+    res
+      .status(400)
+      .json({ error: "Something went wrong, please try again later" });
+  }
+};
+
 module.exports = {
   deleteCategory,
   editCategory,
   getCategory,
   postCategory,
   postQuestion,
+  deleteQuestion,
 };

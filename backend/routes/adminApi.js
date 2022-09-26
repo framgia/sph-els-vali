@@ -6,6 +6,7 @@ const {
   getCategory,
   postCategory,
   postQuestion,
+  deleteQuestion,
 } = require("../controllers/adminApiController");
 
 const router = express.Router();
@@ -44,5 +45,7 @@ router.post(
   ],
   postQuestion
 );
+
+router.delete("/admin/questions/delete/:id", deleteQuestion);
 
 module.exports = router;

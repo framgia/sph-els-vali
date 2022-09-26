@@ -2,11 +2,20 @@ import { CheckIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import useDeleteQuestion from "../../../hooks/useDeleteQuestion";
 import { shuffleChoices } from "../../../utils/shuffle";
+import { toastError, toastSuccess } from "../../../utils/toast";
 import { QuestionSchema } from "../../../validations/questionValidation";
 import GrayedOutBtn from "../../components/GrayedOutBtn";
 
-const Question = ({ id, title, choices, correct_answer, index }) => {
+const Question = ({
+  id,
+  title,
+  choices,
+  correct_answer,
+  index,
+  setForceupdate,
+}) => {
   const optionsLabel = {
     0: "A",
     1: "B",
@@ -16,6 +25,8 @@ const Question = ({ id, title, choices, correct_answer, index }) => {
 
   const [answer, setAnswer] = useState(null);
   const [choiceArray, setChoiceArray] = useState(null);
+
+  const { deleteQuestion } = useDeleteQuestion();
 
   const {
     reset,
@@ -47,6 +58,17 @@ const Question = ({ id, title, choices, correct_answer, index }) => {
     // I'll send a api request to backend here
   };
 
+  const handleDelete = async () => {
+    await deleteQuestion(id)
+      .then(() => {
+        toastSuccess("The question's successfully deleted ");
+        setForceupdate((forceUpdate) => !forceUpdate);
+      })
+      .catch(() => {
+        toastError("Something's went wrong please try again later");
+      });
+  };
+
   useEffect(() => {
     setValue("title", title);
   }, [title]);
@@ -69,7 +91,10 @@ const Question = ({ id, title, choices, correct_answer, index }) => {
       <div className="flex items-center justify-between">
         <h1 className="text-[1.2rem] font-medium">Question {index}</h1>
         <div className="flex p-2 space-x-2">
-          <TrashIcon className="w-10 cursor-pointer trans p-2 rounded-md hover:text-red-700 active:scale-90" />
+          <TrashIcon
+            onClick={handleDelete}
+            className="w-10 cursor-pointer trans p-2 rounded-md hover:text-red-700 active:scale-90"
+          />
         </div>
       </div>
       <div className="flex lg:flex-row sm:flex-col lg:space-x-2 sm:space-y-2 lg:space-y-0">

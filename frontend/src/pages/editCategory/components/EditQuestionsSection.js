@@ -78,6 +78,7 @@ const EditQuestionsSection = () => {
             choices={choices}
             correct_answer={correct_answer}
             index={i + 1}
+            setForceupdate={setForceupdate}
           />
         ))}
 

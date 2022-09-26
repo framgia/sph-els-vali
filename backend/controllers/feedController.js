@@ -540,6 +540,7 @@ const getCategories = async (req, res, next) => {
 
     const answers = await UserAnswer.findAll({
       where: { user_id, correct: true },
+      include: [Question],
     });
 
     const takenLessonsList = [];
@@ -553,11 +554,13 @@ const getCategories = async (req, res, next) => {
     categories.map(({ id, name, description, Questions }) => {
       if (takenLessonsList.includes(id)) {
         let score = 0;
-        answers.map((answer) => {
-          if (answer.quiz_id === id) {
-            score++;
-          }
-        });
+        answers
+          .filter((answer) => answer.Question !== null)
+          .map((answer) => {
+            if (answer.quiz_id === id) {
+              score++;
+            }
+          });
         result.push({
           id,
           name,
@@ -867,7 +870,11 @@ const getLearntWords = async (req, res, next) => {
       where: { id: lessons_array },
       attributes: ["name", "id"],
       include: [
-        { model: Question, attributes: ["correct_answer", "title", "id"] },
+        {
+          model: Question,
+          attributes: ["correct_answer", "title", "id"],
+          paranoid: false,
+        },
         { model: UserAnswer, where: { user_id, correct: true } },
       ],
       paranoid: false,

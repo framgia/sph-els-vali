@@ -144,6 +144,35 @@ const deleteQuestion = async (req, res, next) => {
   }
 };
 
+const editQuestion = async (req, res, next) => {
+  const { id } = req.params;
+  const isAdmin = req.isAdmin;
+  const { title, choice_1, choice_2, choice_3, correct_answer } = req.body;
+
+  const errors = validationResult(req);
+
+  try {
+    if (!isAdmin) {
+      return res.status(403).json({ error: "You are not an admin" });
+    }
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ error: errors.array()[0].msg });
+    }
+
+    await Question.update(
+      { title, choice_1, choice_2, choice_3, correct_answer },
+      { where: { id } }
+    );
+
+    res.status(200).json({ message: "The question was successfully updated" });
+  } catch (err) {
+    res
+      .status(400)
+      .json({ error: "Something went wrong, please try again later" });
+  }
+};
+
 module.exports = {
   deleteCategory,
   editCategory,
@@ -151,4 +180,5 @@ module.exports = {
   postCategory,
   postQuestion,
   deleteQuestion,
+  editQuestion,
 };

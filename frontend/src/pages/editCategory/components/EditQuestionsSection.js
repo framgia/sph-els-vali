@@ -13,13 +13,14 @@ const EditQuestionsSection = () => {
         <h1 className="text-[1.8rem] font-medium">Questions</h1>
         <PlusIcon className="w-14 btn text-white px-4 cursor-pointer" />
       </div>
-      {data?.questions.map(({ id, title, choices, correct_answer }) => (
+      {data?.questions.map(({ id, title, choices, correct_answer }, i) => (
         <Question
           key={id}
           id={id}
           title={title}
           choices={choices}
           correct_answer={correct_answer}
+          index={i + 1}
         />
       ))}
       {!data?.questions.length > 0 && (

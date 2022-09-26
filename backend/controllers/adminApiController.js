@@ -64,4 +64,32 @@ const getCategory = async (req, res, next) => {
   }
 };
 
-module.exports = { deleteCategory, editCategory, getCategory };
+const postCategory = async (req, res, next) => {
+  const isAdmin = req.isAdmin;
+  const { name, description } = req.body;
+
+  const errors = validationResult(req);
+
+  try {
+    if (!isAdmin) {
+      return res.status(403).json({ error: "You are not an admin" });
+    }
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ error: errors.array()[0].msg });
+    }
+    
+    const new_quiz = await Quiz.create({
+      name,
+      description,
+    });
+
+    res.status(200).json({ id: new_quiz.id });
+  } catch (err) {
+    res
+      .status(400)
+      .json({ error: "Something went wrong, please try again later" });
+  }
+};
+
+module.exports = { deleteCategory, editCategory, getCategory, postCategory };

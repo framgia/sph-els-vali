@@ -5,6 +5,7 @@ const {
   editCategory,
   getCategory,
   postCategory,
+  postQuestion,
 } = require("../controllers/adminApiController");
 
 const router = express.Router();
@@ -29,6 +30,19 @@ router.post(
     body("description", "Invalid description").trim().isLength({ min: 1 }),
   ],
   postCategory
+);
+
+router.post(
+  "/admin/questions/add",
+  [
+    body("title", "Invalid title").trim().isLength({ min: 1 }),
+    body("choice_1", "Invalid choice").trim().isLength({ min: 1 }),
+    body("choice_2", "Invalid choice").trim().isLength({ min: 1 }),
+    body("choice_3", "Invalid choice").trim().isLength({ min: 1 }),
+    body("correct_answer", "Invalid answer").trim().isLength({ min: 1 }),
+    body("quiz_id", "Invalid quiz id").trim().isLength({ min: 1 }),
+  ],
+  postQuestion
 );
 
 module.exports = router;

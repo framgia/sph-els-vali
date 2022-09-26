@@ -6,7 +6,7 @@ import { shuffleChoices } from "../../../utils/shuffle";
 import { QuestionSchema } from "../../../validations/questionValidation";
 import GrayedOutBtn from "../../components/GrayedOutBtn";
 
-const Question = ({ id, title, choices, correct_answer }) => {
+const Question = ({ id, title, choices, correct_answer, index }) => {
   const optionsLabel = {
     0: "A",
     1: "B",
@@ -67,7 +67,7 @@ const Question = ({ id, title, choices, correct_answer }) => {
       className="p-2 border-b-2 border-dashed"
     >
       <div className="flex items-center justify-between">
-        <h1 className="text-[1.2rem] font-medium">Question {id}</h1>
+        <h1 className="text-[1.2rem] font-medium">Question {index}</h1>
         <div className="flex p-2 space-x-2">
           <TrashIcon className="w-10 cursor-pointer trans p-2 rounded-md hover:text-red-700 active:scale-90" />
         </div>

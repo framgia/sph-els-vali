@@ -1,5 +1,5 @@
 const { validationResult } = require("express-validator");
-const { Quiz } = require("../models");
+const { Quiz, Question } = require("../models");
 
 const deleteCategory = async (req, res, next) => {
   const isAdmin = req.isAdmin;
@@ -78,7 +78,7 @@ const postCategory = async (req, res, next) => {
     if (!errors.isEmpty()) {
       return res.status(422).json({ error: errors.array()[0].msg });
     }
-    
+
     const new_quiz = await Quiz.create({
       name,
       description,
@@ -92,4 +92,43 @@ const postCategory = async (req, res, next) => {
   }
 };
 
-module.exports = { deleteCategory, editCategory, getCategory, postCategory };
+const postQuestion = async (req, res, next) => {
+  const isAdmin = req.isAdmin;
+  const { title, choice_1, choice_2, choice_3, correct_answer, quiz_id } =
+    req.body;
+
+  const errors = validationResult(req);
+
+  try {
+    if (!isAdmin) {
+      return res.status(403).json({ error: "You are not an admin" });
+    }
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ error: errors.array()[0].msg });
+    }
+
+    await Question.create({
+      title,
+      choice_1,
+      choice_2,
+      choice_3,
+      correct_answer,
+      quiz_id,
+    });
+
+    res.status(200).json({ message: "New question's successfully added" });
+  } catch (err) {
+    res
+      .status(400)
+      .json({ error: "Something went wrong, please try again later" });
+  }
+};
+
+module.exports = {
+  deleteCategory,
+  editCategory,
+  getCategory,
+  postCategory,
+  postQuestion,
+};

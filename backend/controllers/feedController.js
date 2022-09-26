@@ -664,6 +664,7 @@ const getQuestions = async (req, res, next) => {
           id,
           title,
           choices: [choice_1, choice_2, choice_3, correct_answer],
+          correct_answer,
         });
       }
     );

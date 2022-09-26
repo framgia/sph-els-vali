@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { useAnsersContext } from "../../hooks/useAnswersContext";
 import useGetAnswer from "../../hooks/useGetAnswer";
 import useGetLesson from "../../hooks/useGetLesson";
 import useSaveAnswer from "../../hooks/useSaveAnswer";
 import useSliceQuestions from "../../hooks/useSliceQuestions";
+import { toastError } from "../../utils/toast";
 import Navbar from "../components/Navbar";
 import HeaderSection from "./components/HeaderSection";
 import Question from "./components/Question";
@@ -51,18 +52,8 @@ const Lesson = () => {
           nextQuestion();
         })
         .catch(() => {
-          return toast.error(
-            "Could not save the answer, please try again later",
-            {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-            }
+          return toastError(
+            "Could not save the answer, please try again later"
           );
         });
     } else {

@@ -3,6 +3,7 @@ const { body } = require("express-validator");
 const {
   deleteCategory,
   editCategory,
+  getCategory,
 } = require("../controllers/adminApiController");
 
 const router = express.Router();
@@ -17,5 +18,7 @@ router.put(
   ],
   editCategory
 );
+
+router.get("/category/:id", getCategory);
 
 module.exports = router;

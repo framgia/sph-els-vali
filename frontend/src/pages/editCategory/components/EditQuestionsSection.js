@@ -16,7 +16,6 @@ const EditQuestionsSection = () => {
   const [toggle, setToggle] = useState(false);
   const [forceUpdate, setForceupdate] = useState(false);
   const { data } = useGetQuestions(id, forceUpdate);
-
   const { postQuestion } = usePostQuestion();
 
   const {

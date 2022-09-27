@@ -52,7 +52,7 @@ const EditCategorySection = () => {
           ? handleSubmit(onSubmit)
           : (e) => e.preventDefault()
       }
-      className="flex flex-col w-[50%] space-y-5 bg-white p-10 h-fit rounded-md min-w-fit"
+      className="flex flex-col w-full space-y-5 bg-white p-5 h-fit rounded-md min-w-fit mx-5"
     >
       <h1 className="border-b p-2 text-[1.8rem] font-medium">Category Info</h1>
       <CategoryInputs register={register} errors={errors} />

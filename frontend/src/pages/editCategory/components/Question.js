@@ -3,9 +3,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import useDeleteQuestion from "../../../hooks/useDeleteQuestion";
-import { shuffleChoices } from "../../../utils/shuffle";
+import usePutQuestion from "../../../hooks/usePutQuestion";
 import { toastError, toastSuccess } from "../../../utils/toast";
 import { QuestionSchema } from "../../../validations/questionValidation";
+import DeletePopup from "../../components/DeletePopup";
 import GrayedOutBtn from "../../components/GrayedOutBtn";
 
 const Question = ({
@@ -23,10 +24,11 @@ const Question = ({
     3: "D",
   };
 
+  const [toggle, setToggle] = useState(false);
   const [answer, setAnswer] = useState(null);
-  const [choiceArray, setChoiceArray] = useState(null);
 
   const { deleteQuestion } = useDeleteQuestion();
+  const { putQuestion } = usePutQuestion();
 
   const {
     reset,
@@ -39,7 +41,7 @@ const Question = ({
     mode: "onChange",
   });
 
-  const onSubmit = ({
+  const onSubmit = async ({
     choice_1,
     choice_2,
     choice_3,
@@ -47,17 +49,24 @@ const Question = ({
     title,
     c_answer,
   }) => {
-    reset({
-      choice_1,
-      choice_2,
-      choice_3,
-      choice_4,
-      title,
-      c_answer,
+    const choiceArray = [choice_1, choice_2, choice_3, choice_4];
+    let newArray = [];
+    choiceArray.map((choice) => {
+      if (choice !== c_answer) {
+        newArray.push(choice);
+      }
     });
-    // I'll send a api request to backend here
-  };
 
+    await putQuestion(id, title, ...newArray, c_answer)
+      .then(() => {
+        setForceupdate((forceUpdate) => !forceUpdate);
+        reset({ keepTouched: false });
+        toastSuccess("The questoin's successfully updated");
+      })
+      .catch(() => {
+        toastError("Something went wrong please try again later");
+      });
+  };
   const handleDelete = async () => {
     await deleteQuestion(id)
       .then(() => {
@@ -74,7 +83,6 @@ const Question = ({
   }, [title]);
 
   useEffect(() => {
-    setChoiceArray(shuffleChoices(choices));
     setAnswer(correct_answer);
   }, [correct_answer]);
 
@@ -92,7 +100,7 @@ const Question = ({
         <h1 className="text-[1.2rem] font-medium">Question {index}</h1>
         <div className="flex p-2 space-x-2">
           <TrashIcon
-            onClick={handleDelete}
+            onClick={() => setToggle(true)}
             className="w-10 cursor-pointer trans p-2 rounded-md hover:text-red-700 active:scale-90"
           />
         </div>
@@ -106,7 +114,7 @@ const Question = ({
         <p className="text-red-600">{errors.title && "Title is required."}</p>
 
         <div className="flex flex-col w-full">
-          {choiceArray?.map((choice, i) => {
+          {choices?.map((choice, i) => {
             if (
               !errors[`choice_${i + 1}`] &&
               !Object.keys(dirtyFields).length > 0
@@ -166,6 +174,13 @@ const Question = ({
         </div>
       </div>
       <GrayedOutBtn type="submit" text="Save" array={dirtyFields} />
+      {toggle && (
+        <DeletePopup
+          name={`question ${index}`}
+          setToggle={setToggle}
+          handleDelete={handleDelete}
+        />
+      )}
     </form>
   );
 };

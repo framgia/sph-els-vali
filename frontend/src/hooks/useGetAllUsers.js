@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 
-const useGetAllUsers = (search, order) => {
+const useGetAllUsers = (search, order, forceUpdate) => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(null);
@@ -33,7 +33,7 @@ const useGetAllUsers = (search, order) => {
     if (user) {
       getAllUsers();
     }
-  }, [search, order, user]);
+  }, [search, order, user, forceUpdate]);
 
   return { data, error, isLoading };
 };

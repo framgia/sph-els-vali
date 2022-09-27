@@ -1,6 +1,12 @@
 import Pagination from "../../components/Pagination";
 
-const FooterSection = ({search, handlePageClick, pageCount, setItemsPerPage}) => {
+const FooterSection = ({
+  search,
+  handlePageClick,
+  pageCount,
+  setItemsPerPage,
+  itemsPerPage,
+}) => {
   return (
     <div className="p-3">
       {!search.length > 0 && (
@@ -8,6 +14,7 @@ const FooterSection = ({search, handlePageClick, pageCount, setItemsPerPage}) =>
           handlePageClick={handlePageClick}
           pageCount={pageCount}
           setItemsPerPage={setItemsPerPage}
+          itemsPerPage={itemsPerPage}
         />
       )}
     </div>

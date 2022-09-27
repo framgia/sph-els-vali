@@ -1,7 +1,12 @@
 import ReactPaginate from "react-paginate";
 import ShowItem from "./ShowItem";
 
-const Pagination = ({ handlePageClick, pageCount, setItemsPerPage }) => {
+const Pagination = ({
+  handlePageClick,
+  pageCount,
+  setItemsPerPage,
+  itemsPerPage,
+}) => {
   return (
     <div className="flex justify-end space-x-2">
       <ReactPaginate
@@ -15,7 +20,7 @@ const Pagination = ({ handlePageClick, pageCount, setItemsPerPage }) => {
         previousLabel="<"
         renderOnZeroPageCount={null}
       />
-      <ShowItem setItemsPerPage={setItemsPerPage} />
+      <ShowItem setItemsPerPage={setItemsPerPage} itemsPerPage={itemsPerPage} />
     </div>
   );
 };

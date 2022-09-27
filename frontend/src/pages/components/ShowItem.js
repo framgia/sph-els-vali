@@ -1,4 +1,4 @@
-const ShowItem = ({ setItemsPerPage }) => {
+const ShowItem = ({ setItemsPerPage, itemsPerPage }) => {
   return (
     <div className="flex items-center">
       <label htmlFor="pages">Show:</label>
@@ -6,7 +6,7 @@ const ShowItem = ({ setItemsPerPage }) => {
         className="outline-none trans p-1 rounded-lg bg-gray-50"
         onChange={(e) => setItemsPerPage(Number(e.target.value))}
         name="pages"
-        defaultValue={5}
+        defaultValue={itemsPerPage ?? 5}
       >
         <option value="3">3</option>
         <option value="5">5</option>

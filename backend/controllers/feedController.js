@@ -17,7 +17,8 @@ const { sendEmailConfirmation } = require("./userAuthController");
 
 const getUser = async (targetUserId) => {
   const { id, first_name, last_name, email, avatar_url } = await User.findByPk(
-    targetUserId
+    targetUserId,
+    { paranoid: false }
   );
   return { id, first_name, last_name, email, avatar_url };
 };
@@ -122,11 +123,10 @@ const getLearntWordsAndLessons = async (targetUserId) => {
 
     await Promise.all(
       user.UserLessons.map(async (lesson) => {
-        await Quiz.findByPk(lesson.quiz_id, {
-          include: [Question],
-          paranoid: false,
-        }).then((quiz) => {
-          numberOfWords += quiz.Questions.length;
+        await UserAnswer.findAll({
+          where: { quiz_id: lesson.quiz_id, correct: true },
+        }).then((answers) => {
+          numberOfWords += answers.length;
         });
       })
     );
@@ -240,13 +240,14 @@ const getAllUsersInfo = async (req, res, next) => {
       where: search ? searchQuery : { first_name: { [Op.ne]: null } },
       order: orderBy ? orderByQuery : [["id", "ASC"]],
     });
-    users.map(({ id, first_name, last_name, avatar_url }) => {
+    users.map(({ id, first_name, last_name, avatar_url, admin }) => {
       if (followingIdList.includes(id)) {
         usersList.push({
           id,
           first_name,
           last_name,
           avatar_url,
+          admin,
           follows: true,
         });
       } else {
@@ -255,6 +256,7 @@ const getAllUsersInfo = async (req, res, next) => {
           first_name,
           last_name,
           avatar_url,
+          admin,
           follows: false,
         });
       }
@@ -315,16 +317,35 @@ const putfollowAndUnfollow = async (req, res, next) => {
 const getFollowsCount = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const followingCount = await Follow.findAll({
+    const following = await Follow.findAll({
       where: { follower_id: id, flag: true },
     });
-    const followerCount = await Follow.findAll({
+    let followingCount = 0;
+    await Promise.all(
+      following.map(async ({ following_id }) => {
+        const user = await User.findByPk(following_id);
+        if (user) {
+          followingCount++;
+        }
+      })
+    );
+
+    const follower = await Follow.findAll({
       where: { following_id: id, flag: true },
     });
+    let followerCount = 0;
+    await Promise.all(
+      follower.map(async ({ follower_id }) => {
+        const user = await User.findByPk(follower_id);
+        if (user) {
+          followerCount++;
+        }
+      })
+    );
 
     res.status(200).json({
-      followers: followerCount.length,
-      following: followingCount.length,
+      followers: followerCount,
+      following: followingCount,
     });
   } catch (err) {
     res
@@ -349,8 +370,11 @@ const getFollowing = async (req, res, next) => {
       await Promise.all(
         Follows.map(async (follow) => {
           if (follow.flag) {
-            const { id, first_name, last_name, email, avatar_url } =
-              await User.findByPk(follow.following_id);
+            const { id, first_name, last_name, email, avatar_url, deletedAt } =
+              await User.findByPk(follow.following_id, { paranoid: false });
+            if (deletedAt) {
+              return;
+            }
             if (followingIdList.includes(id)) {
               followingsList.push({
                 id,

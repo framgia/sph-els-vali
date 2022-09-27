@@ -8,6 +8,7 @@ const {
   postQuestion,
   deleteQuestion,
   editQuestion,
+  deleteUser,
 } = require("../controllers/adminApiController");
 
 const router = express.Router();
@@ -60,5 +61,7 @@ router.put(
   ],
   editQuestion
 );
+
+router.delete("/admin/users/delete/:id", deleteUser);
 
 module.exports = router;

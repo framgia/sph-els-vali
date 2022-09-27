@@ -1,5 +1,5 @@
 const { validationResult } = require("express-validator");
-const { Quiz, Question } = require("../models");
+const { User, Quiz, Question } = require("../models");
 
 const deleteCategory = async (req, res, next) => {
   const isAdmin = req.isAdmin;
@@ -173,6 +173,25 @@ const editQuestion = async (req, res, next) => {
   }
 };
 
+const deleteUser = async (req, res, next) => {
+  const isAdmin = req.isAdmin;
+  const { id } = req.params;
+
+  try {
+    if (!isAdmin) {
+      return res.status(403).json({ error: "You are not an admin" });
+    }
+
+    await User.destroy({ where: { id } });
+
+    res.status(200).json({ message: "The user was successfully deleted" });
+  } catch (err) {
+    res
+      .status(400)
+      .json({ error: "Something went wrong, please try again later" });
+  }
+};
+
 module.exports = {
   deleteCategory,
   editCategory,
@@ -181,4 +200,5 @@ module.exports = {
   postQuestion,
   deleteQuestion,
   editQuestion,
+  deleteUser,
 };

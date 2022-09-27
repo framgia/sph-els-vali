@@ -18,7 +18,7 @@ const SearchBar = ({ handleSearch, search }) => {
         onChange={handleOnChange}
         type="text"
         placeholder="search"
-        className="p-1 rounded-md outline-none"
+        className="p-1 rounded-md outline-none w-full"
       />
     </form>
   );

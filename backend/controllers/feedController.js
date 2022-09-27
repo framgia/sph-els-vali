@@ -554,7 +554,17 @@ const editPassword = async (req, res, next) => {
 };
 
 const getCategories = async (req, res, next) => {
+  const { search, orderBy } = req.query;
   const user_id = req.user;
+
+  const searchQuery = {
+    [Op.or]: {
+      name: { [Op.like]: `%${search}%` },
+      description: { [Op.like]: `%${search}%` },
+    },
+  };
+
+  const orderByQuery = [["name", orderBy]];
 
   try {
     const lessons = await UserLesson.findAll({
@@ -572,7 +582,11 @@ const getCategories = async (req, res, next) => {
       takenLessonsList.push(lesson.quiz_id);
     });
 
-    const categories = await Quiz.findAll({ include: [Question] });
+    const categories = await Quiz.findAll({
+      include: [Question],
+      where: search ? searchQuery : { name: { [Op.ne]: null } },
+      order: orderBy ? orderByQuery : [["id", "ASC"]],
+    });
     const result = [];
 
     categories.map(({ id, name, description, Questions }) => {

@@ -18,6 +18,7 @@ import AdminLogin from "./pages/adminLogin/AdminLogin";
 import AdminCategories from "./pages/adminCategories/AdminCategories";
 import EditCategory from "./pages/editCategory/EditCategory";
 import AdminUsersList from "./pages/adminUsersPage/AdminUsersList";
+import PageNotFound from "./pages/PageNotFound";
 
 function App() {
   const { user } = useAuthContext();
@@ -106,6 +107,8 @@ function App() {
           />
           <Route path="/signup/verified" element={<VerifiedUser />} />
           <Route path="/signup/verify" element={<VerifyUser />} />
+
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -9,7 +9,7 @@ import Navbar from "../components/Navbar";
 import Category from "./components/Category";
 
 const Categories = () => {
-  const { error, isLoading, data } = useGetCategories();
+  const { error, isLoading, data } = useGetCategories("", "");
   const [selectedLessonId, setSelectedLessonId] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const handleCancel = () => {

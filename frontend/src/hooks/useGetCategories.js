@@ -2,7 +2,7 @@ import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 
-const useGetCategories = (forceUpdate) => {
+const useGetCategories = (order, search, forceUpdate) => {
   const { user } = useAuthContext();
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -14,7 +14,7 @@ const useGetCategories = (forceUpdate) => {
 
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/categories`,
+        `${process.env.REACT_APP_BACKEND_URL}/categories?search=${search}&orderBy=${order}`,
         {
           headers: { Authorization: `Bearer ${user.token}` },
         }
@@ -33,7 +33,7 @@ const useGetCategories = (forceUpdate) => {
     if (user) {
       getCategories();
     }
-  }, [user, forceUpdate]);
+  }, [user, order, search, forceUpdate]);
 
   return { error, isLoading, data };
 };

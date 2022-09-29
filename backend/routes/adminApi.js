@@ -42,6 +42,7 @@ router.post(
     body("choice_1", "Invalid choice").trim().isLength({ min: 1 }),
     body("choice_2", "Invalid choice").trim().isLength({ min: 1 }),
     body("choice_3", "Invalid choice").trim().isLength({ min: 1 }),
+    body("choice_4", "Invalid choice").trim().isLength({ min: 1 }),
     body("correct_answer", "Invalid answer").trim().isLength({ min: 1 }),
     body("quiz_id", "Invalid quiz id").trim().isLength({ min: 1 }),
   ],
@@ -57,6 +58,7 @@ router.put(
     body("choice_1", "Invalid choice").trim().isLength({ min: 1 }),
     body("choice_2", "Invalid choice").trim().isLength({ min: 1 }),
     body("choice_3", "Invalid choice").trim().isLength({ min: 1 }),
+    body("choice_4", "Invalid choice").trim().isLength({ min: 1 }),
     body("correct_answer", "Invalid answer").trim().isLength({ min: 1 }),
   ],
   editQuestion

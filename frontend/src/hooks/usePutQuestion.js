@@ -13,6 +13,7 @@ const usePutQuestion = () => {
     choice_1,
     choice_2,
     choice_3,
+    choice_4,
     correct_answer
   ) => {
     setIsLoading(true);
@@ -27,6 +28,7 @@ const usePutQuestion = () => {
           choice_1,
           choice_2,
           choice_3,
+          choice_4,
           correct_answer,
         }
       );

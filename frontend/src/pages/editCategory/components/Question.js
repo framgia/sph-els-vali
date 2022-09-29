@@ -23,7 +23,6 @@ const Question = ({
     2: "C",
     3: "D",
   };
-
   const [toggle, setToggle] = useState(false);
   const [answer, setAnswer] = useState(null);
 
@@ -50,14 +49,7 @@ const Question = ({
     c_answer,
   }) => {
     const choiceArray = [choice_1, choice_2, choice_3, choice_4];
-    let newArray = [];
-    choiceArray.map((choice) => {
-      if (choice !== c_answer) {
-        newArray.push(choice);
-      }
-    });
-
-    await putQuestion(id, title, ...newArray, c_answer)
+    await putQuestion(id, title, ...choiceArray, c_answer)
       .then(() => {
         setForceupdate((forceUpdate) => !forceUpdate);
         reset({ keepTouched: false });
@@ -126,7 +118,7 @@ const Question = ({
                 <label
                   htmlFor={`choice_${i}_${id}`}
                   className={`cursor-pointer w-full flex space-x-2 p-2 border-2 rounded-lg items-center text-[1.2rem] ${
-                    answer === choice
+                    answer === `choice_${i + 1}`
                       ? "bg-green-500 text-white border-green-500"
                       : null
                   }`}
@@ -135,16 +127,16 @@ const Question = ({
                     type="radio"
                     name="choice"
                     onClick={() => {
-                      setAnswer(choice);
+                      setAnswer(`choice_${i + 1}`);
                     }}
-                    value={choice}
+                    value={`choice_${i + 1}`}
                     id={`choice_${i}_${id}`}
                     className="hidden"
-                    checked={correct_answer === choice}
+                    checked={correct_answer === `choice_${i + 1}`}
                     {...register("c_answer")}
                   />
 
-                  {answer === choice ? (
+                  {answer === `choice_${i + 1}` ? (
                     <CheckIcon className="w-9 rounded-[100%] p-1 border text-green-700 bg-white" />
                   ) : (
                     <p className="border rounded-full p-1 px-3 bg-white">
@@ -154,7 +146,7 @@ const Question = ({
 
                   <input
                     className={`${
-                      answer === choice ? "bg-green-500" : null
+                      answer === `choice_${i + 1}` ? "bg-green-500" : null
                     } outline-none flex w-full`}
                     type="text"
                     name={`choice_${i + 1}`}

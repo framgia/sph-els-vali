@@ -12,6 +12,7 @@ const usePostQuestion = () => {
     choice_1,
     choice_2,
     choice_3,
+    choice_4,
     correct_answer,
     quiz_id
   ) => {
@@ -27,6 +28,7 @@ const usePostQuestion = () => {
           choice_1,
           choice_2,
           choice_3,
+          choice_4,
           correct_answer,
           quiz_id,
         }

@@ -16,11 +16,13 @@ const Follows = () => {
     <div className="h-[100vh]">
       <Navbar />
       <div className="bg-white sm:w-[80%] lg:w-[50%] mx-auto mt-10 shadow-md p-3 rounded-xl">
-        <HeaderSection
-          data={data}
-          id={id}
-          isFollowersActive={isFollowersActive}
-        />
+        {data && (
+          <HeaderSection
+            data={data}
+            id={id}
+            isFollowersActive={isFollowersActive}
+          />
+        )}
         <main>
           <Routes>
             <Route

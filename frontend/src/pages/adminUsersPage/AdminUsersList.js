@@ -28,23 +28,22 @@ const AdminUsersList = () => {
           setItemOffset={setItemOffset}
           setOrder={setOrder}
         />
-
         {currentItems?.length > 0 ? (
           currentItems.map((user) => (
             <User u={user} setForceUpdate={setForceUpdate} />
           ))
-        ) : (
+        ) : !isLoading ? (
           <p className="mx-auto w-fit p-3 text-[1.3rem] font-bold">
             Users Not Found
           </p>
-        )}
+        ) : null}
+
         {isLoading && (
           <div>
             <ArrowPathIcon className="w-10 mx-auto m-5 animate-spin" />
           </div>
         )}
         {error && <div className="mx-auto m-5 w-fit italic">{error}</div>}
-
         <FooterSection
           search={search}
           handlePageClick={handlePageClick}

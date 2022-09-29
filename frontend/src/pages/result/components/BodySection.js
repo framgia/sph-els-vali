@@ -27,11 +27,7 @@ const BodySection = ({ question, user_answer, correct_answer, correct }) => {
                       ? "bg-green-500 text-white border-green-500"
                       : "bg-red-500 text-white border-red-500"
                     : null
-                } ${
-                  correct_answer === choice && user_answer !== correct_answer
-                    ? "bg-green-500 text-white border-green-500"
-                    : null
-                }`}
+                } `}
               >
                 <input
                   type="radio"
@@ -46,9 +42,6 @@ const BodySection = ({ question, user_answer, correct_answer, correct }) => {
                   ) : (
                     <XMarkIcon className="w-9 rounded-[100%] p-1 border text-red-700 bg-white" />
                   )
-                ) : correct_answer === choice &&
-                  user_answer !== correct_answer ? (
-                  <CheckIcon className="w-9 rounded-[100%] p-1 border text-green-700 bg-white" />
                 ) : (
                   <p className="border rounded-full p-1 px-3 bg-white">
                     {optionsLabel[i]}
@@ -66,9 +59,12 @@ const BodySection = ({ question, user_answer, correct_answer, correct }) => {
         ) : (
           <h1 className="text-red-600 text-[1.3rem] font-medium">Incorrect!</h1>
         )}
-        <p>
-          <span className="font-medium">Correct Answer:</span> {correct_answer}
-        </p>
+        {user_answer === correct_answer && (
+          <p>
+            <span className="font-medium">Correct Answer:</span>{" "}
+            {correct_answer}
+          </p>
+        )}
         <p>
           <span className="font-medium">Your Answer: </span>
           {user_answer ?? (

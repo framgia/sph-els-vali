@@ -588,39 +588,47 @@ const getCategories = async (req, res, next) => {
       order: orderBy ? orderByQuery : [["id", "ASC"]],
     });
     const result = [];
-
-    categories.map(({ id, name, description, Questions }) => {
-      if (takenLessonsList.includes(id)) {
-        let score = 0;
-        answers
-          .filter((answer) => answer.Question !== null)
-          .map((answer) => {
-            if (
-              answer.quiz_id === id &&
-              answer.user_answer === answer.Question.correct_answer
-            ) {
-              score++;
-            }
+    await Promise.all(
+      categories.map(async ({ id, name, description, Questions }) => {
+        if (takenLessonsList.includes(id)) {
+          let score = 0;
+          await Promise.all(
+            answers
+              .filter((answer) => answer.Question !== null)
+              .map(async (answer) => {
+                const correct_answer = await Question.findOne({
+                  where: { id: answer.question_id },
+                  attributes: [answer.Question.correct_answer],
+                });
+                if (
+                  answer.quiz_id === id &&
+                  answer.user_answer ===
+                    correct_answer[answer.Question.correct_answer]
+                ) {
+                  score++;
+                }
+              })
+          );
+          result.push({
+            id,
+            name,
+            description,
+            wasTaken: true,
+            score,
+            questionsCount: Questions.length,
           });
-        result.push({
-          id,
-          name,
-          description,
-          wasTaken: true,
-          score,
-          questionsCount: Questions.length,
-        });
-      } else {
-        result.push({
-          id,
-          name,
-          description,
-          wasTaken: false,
-          score: null,
-          questionsCount: Questions.length,
-        });
-      }
-    });
+        } else {
+          result.push({
+            id,
+            name,
+            description,
+            wasTaken: false,
+            score: null,
+            questionsCount: Questions.length,
+          });
+        }
+      })
+    );
 
     res.status(200).json({ categories: result });
   } catch (err) {
@@ -673,15 +681,13 @@ const getLesson = async (req, res, next) => {
 
     const result = [];
 
-    Questions.map(
-      ({ id, title, choice_1, choice_2, choice_3, correct_answer }) => {
-        result.push({
-          id,
-          title,
-          choices: [choice_1, choice_2, choice_3, correct_answer],
-        });
-      }
-    );
+    Questions.map(({ id, title, choice_1, choice_2, choice_3, choice_4 }) => {
+      result.push({
+        id,
+        title,
+        choices: [choice_1, choice_2, choice_3, choice_4],
+      });
+    });
 
     res.status(200).json({ questions: result, name });
   } catch (err) {
@@ -703,11 +709,19 @@ const getQuestions = async (req, res, next) => {
     const result = [];
 
     Questions.map(
-      ({ id, title, choice_1, choice_2, choice_3, correct_answer }) => {
+      ({
+        id,
+        title,
+        choice_1,
+        choice_2,
+        choice_3,
+        choice_4,
+        correct_answer,
+      }) => {
         result.push({
           id,
           title,
-          choices: [choice_1, choice_2, choice_3, correct_answer],
+          choices: [choice_1, choice_2, choice_3, choice_4],
           correct_answer,
         });
       }
@@ -734,9 +748,14 @@ const postAnswer = async (req, res, next) => {
       where: { id: question_id, quiz_id },
     });
 
+    const correct_answer = await Question.findOne({
+      where: { id: question_id },
+      attributes: [question.correct_answer],
+    });
+
     if (answer) {
       if (answer.user_answer !== user_answer) {
-        if (user_answer === question.correct_answer) {
+        if (user_answer === correct_answer[question.correct_answer]) {
           await answer.update({
             user_answer,
             correct: true,
@@ -753,7 +772,7 @@ const postAnswer = async (req, res, next) => {
         return res.status(304).json({ error: "Answer exists!" });
       }
     } else {
-      if (user_answer === question.correct_answer) {
+      if (user_answer === correct_answer[question.correct_answer]) {
         await UserAnswer.create({
           user_id,
           question_id,
@@ -823,14 +842,21 @@ const getResult = async (req, res, next) => {
 
     if (userlesson && !quiz) {
       const questions = await Question.findAll({ where: { quiz_id } });
-      questions.map((question) => {
-        result.push({
-          question_id: question.id,
-          correct: false,
-          correct_answer: question.correct_answer,
-          user_answer: null,
-        });
-      });
+      await Promise.all(
+        questions.map(async (question) => {
+          const correct_answer = await Question.findOne({
+            where: { id: question.id },
+            attributes: [question.correct_answer],
+          });
+
+          result.push({
+            question_id: question.id,
+            correct: false,
+            correct_answer: correct_answer[question.correct_answer],
+            user_answer: null,
+          });
+        })
+      );
       return res.status(200).json({ result, score });
     }
 
@@ -838,41 +864,46 @@ const getResult = async (req, res, next) => {
     quiz.UserAnswers.map((user_answer) => {
       answeredQuestionIdList.push(user_answer.question_id);
     });
-
-    quiz.Questions.map((question) => {
-      if (!answeredQuestionIdList.includes(question.id)) {
-        result.push({
-          question_id: question.id,
-          correct: false,
-          correct_answer: question.correct_answer,
-          user_answer: null,
+    await Promise.all(
+      quiz.Questions.map(async (question) => {
+        const correct_answer = await Question.findOne({
+          where: { id: question.id },
+          attributes: [question.correct_answer],
         });
-      }
-      quiz.UserAnswers.map((answer) => {
-        if (
-          answer.question_id === question.id &&
-          answer.user_answer === question.correct_answer
-        ) {
-          score += 1;
-          result.push({
-            question_id: question.id,
-            correct: true,
-            correct_answer: question.correct_answer,
-            user_answer: answer.user_answer,
-          });
-        } else if (
-          answer.question_id === question.id &&
-          answer.user_answer !== question.correct_answer
-        ) {
+        if (!answeredQuestionIdList.includes(question.id)) {
           result.push({
             question_id: question.id,
             correct: false,
-            correct_answer: question.correct_answer,
-            user_answer: answer.user_answer,
+            correct_answer: correct_answer[question.correct_answer],
+            user_answer: null,
           });
         }
-      });
-    });
+        await quiz.UserAnswers.map((answer) => {
+          if (
+            answer.question_id === question.id &&
+            answer.user_answer === correct_answer[question.correct_answer]
+          ) {
+            score += 1;
+            result.push({
+              question_id: question.id,
+              correct: true,
+              correct_answer: correct_answer[question.correct_answer],
+              user_answer: answer.user_answer,
+            });
+          } else if (
+            answer.question_id === question.id &&
+            answer.user_answer !== correct_answer[question.correct_answer]
+          ) {
+            result.push({
+              question_id: question.id,
+              correct: false,
+              correct_answer: correct_answer[question.correct_answer],
+              user_answer: answer.user_answer,
+            });
+          }
+        });
+      })
+    );
 
     if (userlesson !== score) {
       await userlesson.update({ score });
@@ -921,29 +952,38 @@ const getLearntWords = async (req, res, next) => {
       paranoid: false,
     });
 
-    quizzes.map((quiz) => {
-      result.push({
-        id: quiz.id,
-        name: quiz.name,
-        words: quiz.UserAnswers.map((u) => {
-          let word;
-          quiz.Questions.map((question) => {
-            if (
-              u.quiz_id === quiz.id &&
-              question.id === u.question_id &&
-              question.correct_answer === u.user_answer
-            ) {
-              word = {
-                word: question.title,
-                answer: question.correct_answer,
-              };
-            }
-          });
-
-          return word;
-        }),
-      });
-    });
+    await Promise.all(
+      quizzes.map(async (quiz) => {
+        result.push({
+          id: quiz.id,
+          name: quiz.name,
+          words: await Promise.all(
+            quiz.UserAnswers.map(async (u) => {
+              let word;
+              await Promise.all(
+                quiz.Questions.map(async (question) => {
+                  const correct_answer = await Question.findOne({
+                    where: { id: question.id },
+                    attributes: [question.correct_answer],
+                  });
+                  if (
+                    u.quiz_id === quiz.id &&
+                    question.id === u.question_id &&
+                    correct_answer[question.correct_answer] === u.user_answer
+                  ) {
+                    word = {
+                      word: question.title,
+                      answer: correct_answer[question.correct_answer],
+                    };
+                  }
+                })
+              );
+              return word;
+            })
+          ),
+        });
+      })
+    );
 
     res.status(200).json({ result });
   } catch (err) {

@@ -39,14 +39,8 @@ const EditQuestionsSection = () => {
     c_answer,
   }) => {
     const choiceArray = [choice_1, choice_2, choice_3, choice_4];
-    let newArray = [];
-    choiceArray.map((choice) => {
-      if (choice !== c_answer) {
-        newArray.push(choice);
-      }
-    });
 
-    await postQuestion(title, ...newArray, c_answer, id)
+    await postQuestion(title, ...choiceArray, c_answer, id)
       .then(() => {
         setToggle(false);
         setForceupdate(!forceUpdate);

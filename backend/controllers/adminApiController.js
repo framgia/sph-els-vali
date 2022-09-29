@@ -94,8 +94,15 @@ const postCategory = async (req, res, next) => {
 
 const postQuestion = async (req, res, next) => {
   const isAdmin = req.isAdmin;
-  const { title, choice_1, choice_2, choice_3, correct_answer, quiz_id } =
-    req.body;
+  const {
+    title,
+    choice_1,
+    choice_2,
+    choice_3,
+    choice_4,
+    correct_answer,
+    quiz_id,
+  } = req.body;
 
   const errors = validationResult(req);
 
@@ -113,6 +120,7 @@ const postQuestion = async (req, res, next) => {
       choice_1,
       choice_2,
       choice_3,
+      choice_4,
       correct_answer,
       quiz_id,
     });
@@ -147,7 +155,8 @@ const deleteQuestion = async (req, res, next) => {
 const editQuestion = async (req, res, next) => {
   const { id } = req.params;
   const isAdmin = req.isAdmin;
-  const { title, choice_1, choice_2, choice_3, correct_answer } = req.body;
+  const { title, choice_1, choice_2, choice_3, choice_4, correct_answer } =
+    req.body;
 
   const errors = validationResult(req);
 
@@ -161,7 +170,7 @@ const editQuestion = async (req, res, next) => {
     }
 
     await Question.update(
-      { title, choice_1, choice_2, choice_3, correct_answer },
+      { title, choice_1, choice_2, choice_3, choice_4, correct_answer },
       { where: { id } }
     );
 

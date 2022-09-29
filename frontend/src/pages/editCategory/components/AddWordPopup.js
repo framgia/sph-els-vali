@@ -1,7 +1,7 @@
 import { CheckIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 
-const AddWordPopup = ({ register, errors, getValues, setValue }) => {
+const AddWordPopup = ({ register, errors, setValue }) => {
   const optionsLabel = {
     0: "A",
     1: "B",
@@ -35,7 +35,7 @@ const AddWordPopup = ({ register, errors, getValues, setValue }) => {
                 <label
                   htmlFor={`choice_${i}`}
                   className={`cursor-pointer w-full flex space-x-2 p-2 border-2 rounded-lg items-center text-[1.2rem] ${
-                    answer?.choice === choice && answer?.id === i
+                    answer?.choice === `choice_${i + 1}` && answer?.id === i
                       ? "bg-green-500 text-white border-green-500"
                       : null
                   }`}
@@ -44,15 +44,15 @@ const AddWordPopup = ({ register, errors, getValues, setValue }) => {
                     type="radio"
                     name="choice"
                     onClick={() => {
-                      setAnswer({ choice, id: i });
-                      setCorrectAnswer(getValues([`choice_${i + 1}`])[0]);
+                      setAnswer({ choice: `choice_${i + 1}`, id: i });
+                      setCorrectAnswer(`choice_${i + 1}`);
                     }}
                     id={`choice_${i}`}
                     className="hidden"
                     {...register("c_answer")}
                   />
 
-                  {answer?.choice === choice && answer?.id === i ? (
+                  {answer?.choice === `choice_${i + 1}` && answer?.id === i ? (
                     <CheckIcon className="w-9 rounded-[100%] p-1 border text-green-700 bg-white" />
                   ) : (
                     <p className="border rounded-full p-1 px-3 bg-white">
@@ -62,7 +62,7 @@ const AddWordPopup = ({ register, errors, getValues, setValue }) => {
 
                   <input
                     className={`${
-                      answer?.choice === choice && answer?.id === i
+                      answer?.choice === `choice_${i + 1}` && answer?.id === i
                         ? "bg-green-500"
                         : null
                     } outline-none flex w-full`}

@@ -1,3 +1,4 @@
+import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -13,13 +14,15 @@ import Question from "./components/Question";
 
 const Lesson = () => {
   const { id } = useParams();
-  const { data } = useGetLesson(id);
+  const { data, isLoading } = useGetLesson(id);
   const [answer, setAnswer] = useState("");
 
   const { nextQuestion, previousQueston, currentItem, currentIndex } =
     useSliceQuestions(data?.questions ?? []);
 
-  const { data: answerData } = useGetAnswer(Number(id));
+  const { data: answerData, isLoading: answersLoading } = useGetAnswer(
+    Number(id)
+  );
 
   const { saveAnswer } = useSaveAnswer();
 
@@ -86,11 +89,13 @@ const Lesson = () => {
       <Navbar />
       <div className=" flex-grow flex flex-col sm:w-[80%] lg:w-[60%] mx-auto py-8 space-y-1 justify-center">
         <div className="bg-white p-2 rounded-md shadow-md">
-          <HeaderSection
-            current={currentIndex + 1}
-            all={data?.questions.length}
-            title={data?.name}
-          />
+          {data && (
+            <HeaderSection
+              current={currentIndex + 1}
+              all={data?.questions.length}
+              title={data?.name}
+            />
+          )}
 
           {currentItem && (
             <Question
@@ -100,6 +105,10 @@ const Lesson = () => {
               setAnswer={setAnswer}
             />
           )}
+
+          {isLoading || answersLoading ? (
+            <ArrowPathIcon className="w-8 animate-spin mx-auto my-2" />
+          ) : null}
 
           <footer className="flex justify-around select-none">
             <button

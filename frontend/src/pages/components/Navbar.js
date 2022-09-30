@@ -65,13 +65,18 @@ const Navbar = ({ forceUpdate }) => {
           {error && <ExclamationTriangleIcon className="w-8 text-red-600" />}
           <ChevronDownIcon className="w-6 h-6" />
           {toggle && (
-            <div className="absolute flex flex-col w-[8rem] right-0 -bottom-20 shadow-lg rounded-b-md bg-white text-center">
-              <Link
-                to={"/profile_edit/personal_info"}
-                className="p-2 border-b-2 trans"
-              >
-                Edit Profile
-              </Link>
+            <div className="absolute flex flex-col w-[8rem] right-0 -bottom-28 shadow-lg rounded-b-md bg-white text-center">
+              <div className="border-b-2">
+                <Link to="/" className="flex trans p-2 justify-center">
+                  My Profile
+                </Link>
+                <Link
+                  to={"/profile_edit/personal_info"}
+                  className="p-2 trans flex justify-center"
+                >
+                  Edit Profile
+                </Link>
+              </div>
               <div
                 onClick={handleLogOut}
                 className="p-2  text-red-600 rounded-b-md trans"

@@ -34,6 +34,7 @@ const Users = () => {
           handlePageClick={handlePageClick}
           pageCount={pageCount}
           setItemsPerPage={setItemsPerPage}
+          itemsPerPage={itemsPerPage}
         />
       </main>
     </div>

@@ -69,7 +69,7 @@ const Lesson = () => {
 
   useEffect(() => {
     if (answerData) {
-      dispatch({ type: "GET ANSWERS", payroll: answerData.answers });
+      dispatch({ type: "CLEAR ANSWERS" });
     }
   }, [answerData]);
 

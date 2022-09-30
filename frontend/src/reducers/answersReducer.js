@@ -1,5 +1,7 @@
 export const AnswersReducer = (state, action) => {
   switch (action.type) {
+    case "CLEAR ANSWERS":
+      return [];
     case "GET ANSWERS":
       return [...action.payroll];
     case "SAVE_ANSWER":

@@ -4,21 +4,28 @@ const {
   getLearnigsCount,
   getUserInfo,
   getAllUsersInfo,
+  editPersonalInfo,
+  editEmail,
+  editPassword,
+  getLearntWords,
+} = require("../controllers/feedController");
+
+const {
   putfollowAndUnfollow,
   getFollowsCount,
   getFollowing,
   getFollowers,
-  editPersonalInfo,
-  editEmail,
-  editPassword,
+} = require("../controllers/followController");
+
+const {
   getCategories,
   getLesson,
   postAnswer,
   getAnswer,
   getResult,
-  getLearntWords,
   getQuestions,
-} = require("../controllers/feedController");
+} = require("../controllers/categoriesController");
+
 const isAuth = require("../middleware/isAuth");
 
 const router = express.Router();

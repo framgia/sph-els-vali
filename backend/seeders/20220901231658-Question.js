@@ -1,8 +1,10 @@
 "use strict";
 
+const { Question } = require("../models");
+
 module.exports = {
   async up(queryInterface, Sequelize) {
-    return queryInterface.bulkInsert("Questions", [
+    return await Question.bulkCreate([
       {
         id: 1,
         title: "はい。",

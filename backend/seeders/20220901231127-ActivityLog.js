@@ -1,8 +1,10 @@
 "use strict";
 
+const { ActivityLog } = require("../models");
+
 module.exports = {
   async up(queryInterface, Sequelize) {
-    return queryInterface.bulkInsert("ActivityLogs", [
+    return await ActivityLog.bulkCreate([
       {
         id: 1,
         relatable_id: 1,

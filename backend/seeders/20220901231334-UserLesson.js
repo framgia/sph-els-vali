@@ -1,8 +1,10 @@
 "use strict";
 
+const { UserLesson } = require("../models");
+
 module.exports = {
   async up(queryInterface, Sequelize) {
-    return queryInterface.bulkInsert("UserLessons", [
+    return await UserLesson.bulkCreate([
       {
         id: 1,
         user_id: 1,

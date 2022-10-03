@@ -1,8 +1,10 @@
 "use strict";
 
+const { Quiz } = require("../models");
+
 module.exports = {
   async up(queryInterface, Sequelize) {
-    return queryInterface.bulkInsert("Quizzes", [
+    return await Quiz.bulkCreate([
       {
         id: 1,
         name: "Basic 500",

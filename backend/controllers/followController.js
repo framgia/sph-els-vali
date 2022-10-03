@@ -1,7 +1,5 @@
 const { User, ActivityLog, Follow } = require("../models");
 
-const { getFollowingIdLIst } = require("../utils/feed.utils");
-
 const putfollowAndUnfollow = async (req, res, next) => {
   const { id } = req.params;
   const user_id = req.user;
@@ -93,7 +91,7 @@ const getFollowing = async (req, res, next) => {
   const followingsList = [];
 
   try {
-    const followingIdList = await getFollowingIdLIst(user_id);
+    const followingIdList = await Follow.getFollowingIdLIst(user_id);
 
     const { Follows } = await User.findByPk(id, {
       include: [{ model: Follow, attributes: ["following_id", "flag"] }],
@@ -146,7 +144,7 @@ const getFollowers = async (req, res, next) => {
   const followersList = [];
 
   try {
-    const followingIdList = await getFollowingIdLIst(user_id);
+    const followingIdList = await Follow.getFollowingIdLIst(user_id);
 
     const follower = await Follow.findAll({
       where: { following_id: id, flag: true },

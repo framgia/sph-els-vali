@@ -9,16 +9,10 @@ const {
   UserAnswer,
   Question,
   Follow,
+  ActivityLog,
 } = require("../models");
 
 const { sendEmailConfirmation } = require("./userAuthController");
-
-const {
-  getActivities,
-  getLearntWordsAndLessons,
-  getFollowingIdLIst,
-  getUser,
-} = require("../utils/feed.utils");
 
 // Controllers
 
@@ -26,7 +20,7 @@ const getActivity = async (req, res, next) => {
   const user_id = req.user;
   const id = Number(req.params.id);
 
-  const activities = await getActivities(user_id, id);
+  const activities = await ActivityLog.getActivities(user_id, id);
   res.status(200).json({ activities });
   try {
   } catch (err) {
@@ -40,7 +34,7 @@ const getLearnigsCount = async (req, res, next) => {
   const id = Number(req.params.id);
 
   try {
-    const learntWordsAndLessons = await getLearntWordsAndLessons(id);
+    const learntWordsAndLessons = await UserLesson.getLearntWordsAndLessons(id);
     res.status(200).json({ learntWordsAndLessons });
   } catch (err) {
     res
@@ -56,7 +50,7 @@ const getUserInfo = async (req, res, next) => {
   try {
     let follows;
     const { Follows } = await User.findByPk(user_id, { include: [Follow] });
-    const user = await getUser(id);
+    const user = await User.getUser(id);
     const followingIdList = [];
 
     if (Follows.length > 0) {
@@ -95,7 +89,7 @@ const getAllUsersInfo = async (req, res, next) => {
   const orderByQuery = [["first_name", orderBy]];
 
   try {
-    const followingIdList = await getFollowingIdLIst(user_id);
+    const followingIdList = await Follow.getFollowingIdLIst(user_id);
 
     const usersList = [];
     const users = await User.findAll({

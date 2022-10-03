@@ -4,7 +4,7 @@ const { ActivityLog } = require("../models");
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    return await ActivityLog.bulkCreate([
+    const data = [
       {
         id: 1,
         relatable_id: 1,
@@ -37,7 +37,10 @@ module.exports = {
         createdAt: new Date("2022 01 08 13:01:00 GMT+00:00"),
         updatedAt: new Date("2022 01 08 13:01:00 GMT+00:00"),
       },
-    ]);
+    ];
+    return await ActivityLog.bulkCreate(data, {
+      updateOnDuplicate: Object.keys(ActivityLog.getAttributes()),
+    });
   },
 
   async down(queryInterface, Sequelize) {

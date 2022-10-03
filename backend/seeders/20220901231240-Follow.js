@@ -4,7 +4,7 @@ const { Follow } = require("../models");
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    return await Follow.bulkCreate([
+    const data = [
       {
         id: 1,
         follower_id: 1,
@@ -37,7 +37,10 @@ module.exports = {
         createdAt: new Date("2022 01 05 13:01:00 GMT+00:00"),
         updatedAt: new Date("2022 01 07 13:01:00 GMT+00:00"),
       },
-    ]);
+    ];
+    return await Follow.bulkCreate(data, {
+      updateOnDuplicate: Object.keys(Follow.getAttributes()),
+    });
   },
 
   async down(queryInterface, Sequelize) {

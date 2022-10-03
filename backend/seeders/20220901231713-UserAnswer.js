@@ -4,7 +4,7 @@ const { UserAnswer } = require("../models");
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    return UserAnswer.bulkCreate([
+    const data = [
       {
         id: 1,
         user_id: 1,
@@ -45,7 +45,10 @@ module.exports = {
         createdAt: new Date("2022 02 01 13:01:00 GMT+00:00"),
         updatedAt: new Date("2022 02 01 13:01:00 GMT+00:00"),
       },
-    ]);
+    ];
+    return UserAnswer.bulkCreate(data, {
+      updateOnDuplicate: Object.keys(UserAnswer.getAttributes()),
+    });
   },
 
   async down(queryInterface, Sequelize) {

@@ -4,7 +4,7 @@ const { Quiz } = require("../models");
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    return await Quiz.bulkCreate([
+    const data = [
       {
         id: 1,
         name: "Basic 500",
@@ -29,7 +29,10 @@ module.exports = {
         createdAt: new Date("2022 01 01 13:01:00 GMT+00:00"),
         updatedAt: new Date("2022 01 01 13:01:00 GMT+00:00"),
       },
-    ]);
+    ];
+    return await Quiz.bulkCreate(data, {
+      updateOnDuplicate: Object.keys(Quiz.getAttributes()),
+    });
   },
 
   async down(queryInterface, Sequelize) {

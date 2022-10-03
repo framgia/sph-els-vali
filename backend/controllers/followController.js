@@ -48,31 +48,9 @@ const putfollowAndUnfollow = async (req, res, next) => {
 const getFollowsCount = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const following = await Follow.findAll({
-      where: { follower_id: id, flag: true },
-    });
-    let followingCount = 0;
-    await Promise.all(
-      following.map(async ({ following_id }) => {
-        const user = await User.findByPk(following_id);
-        if (user) {
-          followingCount++;
-        }
-      })
-    );
+    const followingCount = await Follow.followingCount(id);
 
-    const follower = await Follow.findAll({
-      where: { following_id: id, flag: true },
-    });
-    let followerCount = 0;
-    await Promise.all(
-      follower.map(async ({ follower_id }) => {
-        const user = await User.findByPk(follower_id);
-        if (user) {
-          followerCount++;
-        }
-      })
-    );
+    const followerCount = await Follow.followerCount(id);
 
     res.status(200).json({
       followers: followerCount,
@@ -97,38 +75,29 @@ const getFollowing = async (req, res, next) => {
       include: [{ model: Follow, attributes: ["following_id", "flag"] }],
     });
 
-    if (Follows.length > 0) {
-      await Promise.all(
-        Follows.map(async (follow) => {
-          if (follow.flag) {
-            const { id, first_name, last_name, email, avatar_url, deletedAt } =
-              await User.findByPk(follow.following_id, { paranoid: false });
-            if (deletedAt) {
-              return;
-            }
-            if (followingIdList.includes(id)) {
-              followingsList.push({
-                id,
-                first_name,
-                last_name,
-                email,
-                avatar_url,
-                follows: true,
-              });
-            } else {
-              followingsList.push({
-                id,
-                first_name,
-                last_name,
-                email,
-                avatar_url,
-                follows: false,
-              });
-            }
-          }
-        })
-      );
+    if (Follows.length <= 0) {
+      return res.status(200).json({ following: followingsList });
     }
+
+    await Promise.all(
+      Follows.map(async (follow) => {
+        if (follow.flag) {
+          const { id, first_name, last_name, email, avatar_url, deletedAt } =
+            await User.findByPk(follow.following_id, { paranoid: false });
+          if (deletedAt) {
+            return;
+          }
+          followingsList.push({
+            id,
+            first_name,
+            last_name,
+            email,
+            avatar_url,
+            follows: followingIdList.includes(id),
+          });
+        }
+      })
+    );
 
     res.status(200).json({ following: followingsList });
   } catch (err) {
@@ -151,33 +120,23 @@ const getFollowers = async (req, res, next) => {
       attributes: ["follower_id"],
     });
 
-    if (follower.length > 0) {
-      await Promise.all(
-        follower.map(async (m) => {
-          const { id, first_name, last_name, email, avatar_url } =
-            await User.findByPk(m.follower_id);
-          if (followingIdList.includes(id)) {
-            followersList.push({
-              id,
-              first_name,
-              last_name,
-              email,
-              avatar_url,
-              follows: true,
-            });
-          } else {
-            followersList.push({
-              id,
-              first_name,
-              last_name,
-              email,
-              avatar_url,
-              follows: false,
-            });
-          }
-        })
-      );
+    if (follower.length <= 0) {
+      return res.status(200).json({ followers: followersList });
     }
+    await Promise.all(
+      follower.map(async (m) => {
+        const { id, first_name, last_name, email, avatar_url } =
+          await User.findByPk(m.follower_id);
+        followersList.push({
+          id,
+          first_name,
+          last_name,
+          email,
+          avatar_url,
+          follows: followingIdList.includes(id),
+        });
+      })
+    );
 
     res.status(200).json({ followers: followersList });
   } catch (err) {

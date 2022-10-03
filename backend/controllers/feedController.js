@@ -61,12 +61,10 @@ const getUserInfo = async (req, res, next) => {
       });
     }
 
-    if (followingIdList.includes(id)) {
-      follows = true;
-    } else {
-      follows = false;
-    }
+    follows = followingIdList.includes(id);
+
     let userResult = { ...user, follows };
+
     res.status(200).json({ user: userResult });
   } catch (err) {
     res
@@ -97,25 +95,14 @@ const getAllUsersInfo = async (req, res, next) => {
       order: orderBy ? orderByQuery : [["id", "ASC"]],
     });
     users.map(({ id, first_name, last_name, avatar_url, admin }) => {
-      if (followingIdList.includes(id)) {
-        usersList.push({
-          id,
-          first_name,
-          last_name,
-          avatar_url,
-          admin,
-          follows: true,
-        });
-      } else {
-        usersList.push({
-          id,
-          first_name,
-          last_name,
-          avatar_url,
-          admin,
-          follows: false,
-        });
-      }
+      usersList.push({
+        id,
+        first_name,
+        last_name,
+        avatar_url,
+        admin,
+        follows: followingIdList.includes(id),
+      });
     });
     res.status(200).json({ users: usersList });
   } catch (err) {

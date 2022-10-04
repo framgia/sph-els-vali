@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import useGetUser from "../../hooks/useGetUser";
+import useGetUser from "hooks/useGetUser";
 import Followers from "./components/Followers";
 import Following from "./components/Following";
 import { useState } from "react";

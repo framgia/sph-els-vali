@@ -1,5 +1,5 @@
-import SearchBar from "../../components/SearchBar";
-import SortItem from "../../components/SortItem";
+import SearchBar from "pages/components/SearchBar";
+import SortItem from "pages/components/SortItem";
 
 const HeaderSection = ({
   search,

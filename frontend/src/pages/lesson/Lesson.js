@@ -1,89 +1,27 @@
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { useAnsersContext } from "../../hooks/useAnswersContext";
-import useGetAnswer from "../../hooks/useGetAnswer";
 import useGetLesson from "../../hooks/useGetLesson";
-import useSaveAnswer from "../../hooks/useSaveAnswer";
-import useSliceQuestions from "../../hooks/useSliceQuestions";
-import { toastError } from "../../utils/toast";
 import Navbar from "../components/Navbar";
 import HeaderSection from "./components/HeaderSection";
 import Question from "./components/Question";
+import useLesson from "./hooks/useLesson";
 
 const Lesson = () => {
   const { id } = useParams();
   const { data, isLoading } = useGetLesson(id);
   const [answer, setAnswer] = useState("");
 
-  const { nextQuestion, previousQueston, currentItem, currentIndex } =
-    useSliceQuestions(data?.questions ?? []);
+  const {
+    currentIndex,
+    currentItem,
+    answersLoading,
+    previousQueston,
+    handleNext,
+  } = useLesson(answer, setAnswer, data, id);
 
-  const { data: answerData, isLoading: answersLoading } = useGetAnswer(
-    Number(id)
-  );
-
-  const { saveAnswer } = useSaveAnswer();
-
-  const { answers, dispatch } = useAnsersContext();
-
-  const getAnswer = (id) => {
-    if (currentItem && id) {
-      const answ = answers.filter((m) => m.question_id === id);
-      return answ[0];
-    }
-  };
-
-  const navigate = useNavigate();
-
-  const handleNext = async () => {
-    if (answer && answer !== getAnswer(currentItem?.id)?.user_answer) {
-      await saveAnswer(currentItem?.id, answer, Number(id))
-        .then(() => {
-          if (currentIndex + 1 === data?.questions.length) {
-            return navigate(`/result/${id}`);
-          }
-          dispatch({
-            type: "SAVE_ANSWER",
-            payroll: {
-              user_answer: answer,
-              question_id: currentItem?.id,
-              quiz_id: Number(id),
-            },
-          });
-          nextQuestion();
-        })
-        .catch(() => {
-          return toastError(
-            "Could not save the answer, please try again later"
-          );
-        });
-    } else {
-      if (currentIndex + 1 === data?.questions.length) {
-        return navigate(`/result/${id}`);
-      }
-      nextQuestion();
-    }
-  };
-
-  useEffect(() => {
-    if (answerData) {
-      dispatch({ type: "CLEAR ANSWERS" });
-    }
-  }, [answerData]);
-
-  useEffect(() => {
-    if (
-      getAnswer(currentItem?.id)?.quiz_id === Number(id) &&
-      currentItem?.id === getAnswer(currentItem?.id).question_id
-    ) {
-      setAnswer(getAnswer(currentItem?.id)?.user_answer);
-    } else {
-      setAnswer("");
-    }
-  }, [currentItem]);
-
+  const bntClass = `btn2 ${currentIndex > 0 ? "visible" : "invisible"}`;
   return (
     <div className="min-h-[100vh] w-[100%] h-[100%] flex flex-col">
       <Navbar />
@@ -111,10 +49,7 @@ const Lesson = () => {
           ) : null}
 
           <footer className="flex justify-around select-none">
-            <button
-              onClick={() => previousQueston()}
-              className={`btn2 ${currentIndex > 0 ? "visible" : "invisible"}`}
-            >
+            <button onClick={() => previousQueston()} className={bntClass}>
               {"< Back"}
             </button>
             <button onClick={handleNext} className="btn2">

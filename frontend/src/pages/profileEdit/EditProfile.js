@@ -5,16 +5,16 @@ import EditEmail from "./components/EditEmail";
 import EditPassword from "./components/EditPassword";
 import EditPersonalInfo from "./components/EditPersonalInfo";
 import Navbar from "../components/Navbar";
-import { useAuthContext } from "../../hooks/useAuthContext";
-import useGetUser from "../../hooks/useGetUser";
+import { useAuthContext } from "hooks/useAuthContext";
+import useGetUser from "hooks/useGetUser";
 import HeaderSection from "./components/HeaderSection";
-import usePutPersonalInfo from "../../hooks/usePutPersonalInfo";
+import usePutPersonalInfo from "hooks/usePutPersonalInfo";
 import { ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
-import usePutEmail from "../../hooks/usePutEmail";
-import usePutPassword from "../../hooks/usePutPassword";
-import { toastError, toastSuccess } from "../../utils/toast";
+import usePutEmail from "hooks/usePutEmail";
+import usePutPassword from "hooks/usePutPassword";
+import { toastError, toastSuccess } from "utils/toast";
 
 const EditProfile = () => {
   const { user, dispatch } = useAuthContext();

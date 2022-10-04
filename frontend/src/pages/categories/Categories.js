@@ -4,7 +4,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import useGetCategories from "../../hooks/useGetCategories";
+import useGetCategories from "hooks/useGetCategories";
 import Navbar from "../components/Navbar";
 import Category from "./components/Category";
 

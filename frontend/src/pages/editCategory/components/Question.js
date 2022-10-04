@@ -2,12 +2,12 @@ import { CheckIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import useDeleteQuestion from "../../../hooks/useDeleteQuestion";
-import usePutQuestion from "../../../hooks/usePutQuestion";
-import { toastError, toastSuccess } from "../../../utils/toast";
-import { QuestionSchema } from "../../../validations/questionValidation";
-import DeletePopup from "../../components/DeletePopup";
-import GrayedOutBtn from "../../components/GrayedOutBtn";
+import useDeleteQuestion from "hooks/useDeleteQuestion";
+import usePutQuestion from "hooks/usePutQuestion";
+import { toastError, toastSuccess } from "utils/toast";
+import { QuestionSchema } from "validations/questionValidation";
+import DeletePopup from "pages/components/DeletePopup";
+import GrayedOutBtn from "pages/components/GrayedOutBtn";
 
 const Question = ({
   id,

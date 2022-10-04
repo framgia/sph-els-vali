@@ -1,7 +1,7 @@
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import { useParams } from "react-router-dom";
-import useGetQuestions from "../../hooks/useGetQuestions";
-import useGetResult from "../../hooks/useGetResult";
+import useGetQuestions from "hooks/useGetQuestions";
+import useGetResult from "hooks/useGetResult";
 import Navbar from "../components/Navbar";
 import HeaderSection from "../lesson/components/HeaderSection";
 import BodySection from "./components/BodySection";

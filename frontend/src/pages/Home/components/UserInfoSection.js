@@ -1,10 +1,10 @@
-import useGetUser from "../../../hooks/useGetUser";
-import useGetLearningsCount from "../../../hooks/useGetLearningsCount";
+import useGetUser from "hooks/useGetUser";
+import useGetLearningsCount from "hooks/useGetLearningsCount";
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import UseGetFollowsCount from "../../../hooks/useGetFollowsCount";
-import FollowButton from "../../components/FollowButton";
-import { useAuthContext } from "../../../hooks/useAuthContext";
+import UseGetFollowsCount from "hooks/useGetFollowsCount";
+import FollowButton from "pages/components/FollowButton";
+import { useAuthContext } from "hooks/useAuthContext";
 import { Link } from "react-router-dom";
 
 const UserInfo = ({ id }) => {

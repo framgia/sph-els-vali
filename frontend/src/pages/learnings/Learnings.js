@@ -1,7 +1,7 @@
 import { ArrowLeftIcon, ArrowPathIcon } from "@heroicons/react/24/solid";
 import { Link, useParams } from "react-router-dom";
-import useGetLearntWords from "../../hooks/useGetLearntWords";
-import useGetUser from "../../hooks/useGetUser";
+import useGetLearntWords from "hooks/useGetLearntWords";
+import useGetUser from "hooks/useGetUser";
 import Navbar from "../components/Navbar";
 import MainSection from "./components/MainSection";
 

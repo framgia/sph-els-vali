@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { EditPasswordSchema } from "../../../validations/editPasswordValidation";
+import { EditPasswordSchema } from "validations/editPasswordValidation";
 
 const EditPassword = ({ onPasswordEditSubmit, setcanChangeAvatar }) => {
   const {

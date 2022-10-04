@@ -1,9 +1,9 @@
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
-import { useAuthContext } from "../../../hooks/useAuthContext";
-import useDeleteUser from "../../../hooks/useDeleteUser";
-import { toastError, toastSuccess } from "../../../utils/toast";
-import DeletePopup from "../../components/DeletePopup";
+import { useAuthContext } from "hooks/useAuthContext";
+import useDeleteUser from "hooks/useDeleteUser";
+import { toastError, toastSuccess } from "utils/toast";
+import DeletePopup from "pages/components/DeletePopup";
 
 const User = ({ u, setForceUpdate }) => {
   const { user } = useAuthContext();

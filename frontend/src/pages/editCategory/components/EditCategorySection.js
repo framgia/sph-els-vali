@@ -1,14 +1,14 @@
 import { useParams } from "react-router-dom";
-import useGetCategory from "../../../hooks/useGetCategory";
+import useGetCategory from "hooks/useGetCategory";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { CategoryInfoSchema } from "../../../validations/categoryInfoValidation";
+import { CategoryInfoSchema } from "validations/categoryInfoValidation";
 import { useEffect, useState } from "react";
-import usePutCategory from "../../../hooks/usePutCategory";
-import { toastError, toastSuccess } from "../../../utils/toast";
+import usePutCategory from "hooks/usePutCategory";
+import { toastError, toastSuccess } from "utils/toast";
 import { ToastContainer } from "react-toastify";
-import GrayedOutBtn from "../../components/GrayedOutBtn";
-import CategoryInputs from "../../components/CategoryInputs";
+import GrayedOutBtn from "pages/components/GrayedOutBtn";
+import CategoryInputs from "pages/components/CategoryInputs";
 
 const EditCategorySection = () => {
   const { id } = useParams();

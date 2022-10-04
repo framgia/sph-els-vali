@@ -16,8 +16,8 @@ const Category = ({
   };
 
   return (
-    <div className="bg-white p-4 space-y-10 rounded-lg shadow-md">
-      <div className="text-[1.5rem] font-medium border-b-2 flex justify-between">
+    <div className="bg-white p-4 space-y-10 rounded-lg shadow-md flex flex-col">
+      <div className="text-[1.5rem] font-medium border-b-2 flex justify-between ">
         <p>{name}</p>
         {score !== null && (
           <p>
@@ -25,7 +25,7 @@ const Category = ({
           </p>
         )}
       </div>
-      <p className="text-[1.2rem] break-all">{description}</p>
+      <p className="text-[1.2rem] break-all flex-grow">{description}</p>
       {wasTaken ? (
         <div className="flex justify-between">
           <button

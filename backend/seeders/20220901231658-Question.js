@@ -1,8 +1,10 @@
 "use strict";
 
+const { Question } = require("../models");
+
 module.exports = {
   async up(queryInterface, Sequelize) {
-    return queryInterface.bulkInsert("Questions", [
+    const data = [
       {
         id: 1,
         title: "はい。",
@@ -183,7 +185,10 @@ module.exports = {
         createdAt: new Date("2022 01 01 13:01:00 GMT+00:00"),
         updatedAt: new Date("2022 01 01 13:01:00 GMT+00:00"),
       },
-    ]);
+    ];
+    return await Question.bulkCreate(data, {
+      updateOnDuplicate: Object.keys(Question.getAttributes()),
+    });
   },
 
   async down(queryInterface, Sequelize) {

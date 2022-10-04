@@ -28,5 +28,12 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: true,
     }
   );
+
+  User.getUser = async (targetUserId) => {
+    const { id, first_name, last_name, email, avatar_url } =
+      await User.findByPk(targetUserId, { paranoid: false });
+    return { id, first_name, last_name, email, avatar_url };
+  };
+
   return User;
 };

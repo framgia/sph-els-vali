@@ -1,8 +1,8 @@
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useDeleteCategory from "../../../hooks/useDeleteCategory";
-import DeletePopup from "../../components/DeletePopup";
+import useDeleteCategory from "hooks/useDeleteCategory";
+import DeletePopup from "pages/components/DeletePopup";
 
 const Category = ({ id, name, description, setForceupdate }) => {
   const [toggle, setToggle] = useState(false);

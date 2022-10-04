@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Navbar from "../components/Navbar";
-import useGetAllUsers from "../../hooks/useGetAllUsers";
-import usePagination from "../../hooks/usePagination";
+import Navbar from "pages/components/Navbar";
+import useGetAllUsers from "hooks/useGetAllUsers";
+import usePagination from "hooks/usePagination";
 import FooterSection from "./components/FooterSection";
 import HeaderSection from "./components/HeaderSection";
 import User from "./components/User";

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import useGetCategories from "../../hooks/useGetCategories";
-import usePagination from "../../hooks/usePagination";
+import useGetCategories from "hooks/useGetCategories";
+import usePagination from "hooks/usePagination";
 import AdminNavbar from "../components/AdminNavbar";
 import SearchBar from "../components/SearchBar";
 import SortItem from "../components/SortItem";

@@ -4,11 +4,11 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import usePostCategory from "../../../hooks/usePostCategory";
-import { toastError } from "../../../utils/toast";
-import { CategoryInfoSchema } from "../../../validations/categoryInfoValidation";
-import CategoryInputs from "../../components/CategoryInputs";
-import GrayedOutBtn from "../../components/GrayedOutBtn";
+import usePostCategory from "hooks/usePostCategory";
+import { toastError } from "utils/toast";
+import { CategoryInfoSchema } from "validations/categoryInfoValidation";
+import CategoryInputs from "pages/components/CategoryInputs";
+import GrayedOutBtn from "pages/components/GrayedOutBtn";
 
 const HeaderSection = () => {
   const [toggle, setToggle] = useState(false);

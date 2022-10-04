@@ -1,8 +1,8 @@
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { ToastContainer } from "react-toastify";
-import useGetAllUsers from "../../hooks/useGetAllUsers";
-import usePagination from "../../hooks/usePagination";
+import useGetAllUsers from "hooks/useGetAllUsers";
+import usePagination from "hooks/usePagination";
 import AdminNavbar from "../components/AdminNavbar";
 import FooterSection from "../users/components/FooterSection";
 import HeaderSection from "../users/components/HeaderSection";

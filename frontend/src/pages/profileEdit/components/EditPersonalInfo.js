@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { EditPersonalInfoSchema } from "../../../validations/editPrersonalInfoValidation";
+import { EditPersonalInfoSchema } from "validations/editPrersonalInfoValidation";
 
 const EditPersonalInfo = ({
   data,

@@ -1,7 +1,7 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import useDebounce from "../../hooks/useDebounce";
+import useDebounce from "hooks/useDebounce";
 
-const SearchBar = ({ handleSearch, search }) => {
+const SearchBar = ({ handleSearch }) => {
   const { debounce } = useDebounce();
   const handleOnChange = (e) => {
     const value = e.target.value;

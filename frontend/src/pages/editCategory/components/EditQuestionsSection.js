@@ -3,11 +3,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import useGetQuestions from "../../../hooks/useGetQuestions";
-import usePostQuestion from "../../../hooks/usePostQuestion";
-import { toastError } from "../../../utils/toast";
-import { QuestionSchema } from "../../../validations/questionValidation";
-import GrayedOutBtn from "../../components/GrayedOutBtn";
+import useGetQuestions from "hooks/useGetQuestions";
+import usePostQuestion from "hooks/usePostQuestion";
+import { toastError } from "utils/toast";
+import { QuestionSchema } from "validations/questionValidation";
+import GrayedOutBtn from "pages/components/GrayedOutBtn";
 import AddWordPopup from "./AddWordPopup";
 import Question from "./Question";
 

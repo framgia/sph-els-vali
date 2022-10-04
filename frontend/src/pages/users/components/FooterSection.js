@@ -1,4 +1,4 @@
-import Pagination from "../../components/Pagination";
+import Pagination from "pages/components/Pagination";
 
 const FooterSection = ({
   search,

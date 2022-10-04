@@ -1,7 +1,7 @@
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
-import { useAuthContext } from "../../../hooks/useAuthContext";
-import FollowButton from "../../components/FollowButton";
+import { useAuthContext } from "hooks/useAuthContext";
+import FollowButton from "pages/components/FollowButton";
 
 const User = ({ users, isLoading, error }) => {
   const { user } = useAuthContext();

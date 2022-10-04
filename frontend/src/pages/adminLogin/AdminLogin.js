@@ -1,8 +1,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import useAdminLogin from "../../hooks/useAdminLogin";
-import { loginInputSchema } from "../../validations/loginValidation";
+import useAdminLogin from "hooks/useAdminLogin";
+import { loginInputSchema } from "validations/loginValidation";
 import AdminLoginForm from "./components/AdminLoginForm";
 
 const AdminLogin = () => {

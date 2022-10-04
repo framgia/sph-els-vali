@@ -1,11 +1,11 @@
-import usePagination from "../../../hooks/usePagination";
+import usePagination from "hooks/usePagination";
 import { useState } from "react";
-import Pagination from "../../components/Pagination";
+import Pagination from "pages/components/Pagination";
 import Moment from "react-moment";
-import useGetActivities from "../../../hooks/useGetActivities";
+import useGetActivities from "hooks/useGetActivities";
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import { useAuthContext } from "../../../hooks/useAuthContext";
+import { useAuthContext } from "hooks/useAuthContext";
 
 const Activities = ({ id }) => {
   const [itemsPerPage, setItemsPerPage] = useState(5);

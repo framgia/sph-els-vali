@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import useGetFollowings from "../../../hooks/useGetFollowings";
-import usePagination from "../../../hooks/usePagination";
-import Pagination from "../../components/Pagination";
-import User from "../../users/components/User";
+import useGetFollowings from "hooks/useGetFollowings";
+import usePagination from "hooks/usePagination";
+import Pagination from "pages/components/Pagination";
+import User from "pages/users/components/User";
 
 const Followers = ({ user_id, setIsFollowersActive }) => {
   const [itemsPerPage, setItemsPerPage] = useState(5);

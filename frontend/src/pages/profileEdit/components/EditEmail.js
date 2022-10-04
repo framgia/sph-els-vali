@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { EditEmailSchema } from "../../../validations/editEmailValidation";
+import { EditEmailSchema } from "validations/editEmailValidation";
 
 const EditEmail = ({ data, onEmailEditSubmit, setcanChangeAvatar }) => {
   const {

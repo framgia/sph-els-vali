@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
+
 import NotFound from "images/page_not_found.svg";
+
 const PageNotFound = () => {
   const prevPath = localStorage.getItem("prevPath");
   const navigate = useNavigate();

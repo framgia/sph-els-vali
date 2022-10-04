@@ -1,5 +1,7 @@
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
+
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+
 import useFollowOrUnfolllow from "hooks/useFollowOrUnfollow";
 
 const FollowButton = ({ followingState, id }) => {

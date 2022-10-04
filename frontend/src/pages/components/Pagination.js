@@ -1,4 +1,5 @@
 import ReactPaginate from "react-paginate";
+
 import ShowItem from "./ShowItem";
 
 const Pagination = ({

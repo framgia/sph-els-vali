@@ -1,5 +1,6 @@
-import { Squares2X2Icon, UserGroupIcon } from "@heroicons/react/24/outline";
 import { Link, useLocation } from "react-router-dom";
+
+import { Squares2X2Icon, UserGroupIcon } from "@heroicons/react/24/outline";
 
 const AdminNavLinks = ({ mobile }) => {
   const { pathname } = useLocation();

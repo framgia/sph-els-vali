@@ -1,43 +1,16 @@
-const { User, ActivityLog, Follow } = require("../models");
+const { User, Follow } = require("../models");
 
-const putfollowAndUnfollow = async (req, res, next) => {
+const toggleFollow = async (req, res, next) => {
   const { id } = req.params;
   const user_id = req.user;
   try {
-    const check = await Follow.findOne({
-      where: { follower_id: user_id, following_id: id },
-      order: [["createdAt", "DESC"]],
-    });
+    const follow = await Follow.toggleFollow(res, id, user_id);
 
-    if (check && check.flag) {
-      await Follow.update({ flag: false }, { where: { id: check.id } });
-      await ActivityLog.create({
-        relatable_id: check.id,
-        relatable_type: "unfollows",
-        user_id,
-      });
-      res.status(200).json({ message: "Unfollow operation succeded" });
-    } else if (check && check.flag === false) {
-      await Follow.update({ flag: true }, { where: { id: check.id } });
-      await ActivityLog.create({
-        relatable_id: check.id,
-        relatable_type: "follows",
-        user_id,
-      });
-      res.status(200).json({ message: "Follow operation succeded" });
-    } else {
-      const follow = await Follow.create({
-        follower_id: user_id,
-        following_id: id,
-        flag: true,
-      });
-      await ActivityLog.create({
-        relatable_id: follow.id,
-        relatable_type: "follows",
-        user_id: user_id,
-      });
-      res.status(200).json({ message: "Follow operation succeded" });
-    }
+    res.status(200).json({
+      message: follow
+        ? "Follow operation succeded"
+        : "Unfollow operation succeded",
+    });
   } catch (err) {
     res
       .status(400)
@@ -79,25 +52,7 @@ const getFollowing = async (req, res, next) => {
       return res.status(200).json({ following: followingsList });
     }
 
-    await Promise.all(
-      Follows.map(async (follow) => {
-        if (follow.flag) {
-          const { id, first_name, last_name, email, avatar_url, deletedAt } =
-            await User.findByPk(follow.following_id, { paranoid: false });
-          if (deletedAt) {
-            return;
-          }
-          followingsList.push({
-            id,
-            first_name,
-            last_name,
-            email,
-            avatar_url,
-            follows: followingIdList.includes(id),
-          });
-        }
-      })
-    );
+    await Follow.getFollowing(followingsList, followingIdList, id);
 
     res.status(200).json({ following: followingsList });
   } catch (err) {
@@ -123,20 +78,8 @@ const getFollowers = async (req, res, next) => {
     if (follower.length <= 0) {
       return res.status(200).json({ followers: followersList });
     }
-    await Promise.all(
-      follower.map(async (m) => {
-        const { id, first_name, last_name, email, avatar_url } =
-          await User.findByPk(m.follower_id);
-        followersList.push({
-          id,
-          first_name,
-          last_name,
-          email,
-          avatar_url,
-          follows: followingIdList.includes(id),
-        });
-      })
-    );
+
+    await Follow.getFollowers(followersList, followingIdList, id);
 
     res.status(200).json({ followers: followersList });
   } catch (err) {
@@ -147,7 +90,7 @@ const getFollowers = async (req, res, next) => {
 };
 
 module.exports = {
-  putfollowAndUnfollow,
+  toggleFollow,
   getFollowsCount,
   getFollowing,
   getFollowers,

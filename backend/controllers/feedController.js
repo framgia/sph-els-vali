@@ -2,15 +2,7 @@ const fs = require("fs");
 const bcrypt = require("bcrypt");
 const path = require("path");
 const { Op } = require("sequelize");
-const {
-  User,
-  Quiz,
-  UserLesson,
-  UserAnswer,
-  Question,
-  Follow,
-  ActivityLog,
-} = require("../models");
+const { User, UserLesson, Follow, ActivityLog } = require("../models");
 
 const { sendEmailConfirmation } = require("./userAuthController");
 
@@ -35,6 +27,7 @@ const getLearnigsCount = async (req, res, next) => {
 
   try {
     const learntWordsAndLessons = await UserLesson.getLearntWordsAndLessons(id);
+
     res.status(200).json({ learntWordsAndLessons });
   } catch (err) {
     res
@@ -213,69 +206,7 @@ const getLearntWords = async (req, res, next) => {
   const { user_id } = req.params;
 
   try {
-    const lessons = await UserLesson.findAll({
-      where: { user_id },
-      attributes: ["quiz_id"],
-    });
-
-    const lessons_array = [];
-
-    if (lessons.length > 0) {
-      lessons.map((lesson) => {
-        if (!lessons_array.includes(lesson.quiz_id)) {
-          lessons_array.push(lesson.quiz_id);
-        }
-      });
-    }
-
-    const result = [];
-
-    const quizzes = await Quiz.findAll({
-      where: { id: lessons_array },
-      attributes: ["name", "id"],
-      include: [
-        {
-          model: Question,
-          attributes: ["correct_answer", "title", "id"],
-          paranoid: false,
-        },
-        { model: UserAnswer, where: { user_id, correct: true } },
-      ],
-      paranoid: false,
-    });
-
-    await Promise.all(
-      quizzes.map(async (quiz) => {
-        result.push({
-          id: quiz.id,
-          name: quiz.name,
-          words: await Promise.all(
-            quiz.UserAnswers.map(async (u) => {
-              let word;
-              await Promise.all(
-                quiz.Questions.map(async (question) => {
-                  const correct_answer = await Question.findOne({
-                    where: { id: question.id },
-                    attributes: [question.correct_answer],
-                  });
-                  if (
-                    u.quiz_id === quiz.id &&
-                    question.id === u.question_id &&
-                    correct_answer[question.correct_answer] === u.user_answer
-                  ) {
-                    word = {
-                      word: question.title,
-                      answer: correct_answer[question.correct_answer],
-                    };
-                  }
-                })
-              );
-              return word;
-            })
-          ),
-        });
-      })
-    );
+    const result = await UserLesson.getLearntWords(user_id);
 
     res.status(200).json({ result });
   } catch (err) {

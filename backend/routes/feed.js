@@ -11,7 +11,7 @@ const {
 } = require("../controllers/feedController");
 
 const {
-  putfollowAndUnfollow,
+  toggleFollow,
   getFollowsCount,
   getFollowing,
   getFollowers,
@@ -40,7 +40,7 @@ router.get("/user/info/:id", getUserInfo);
 
 router.get("/users", getAllUsersInfo);
 
-router.put("/follows/:id", putfollowAndUnfollow);
+router.put("/follows/:id", toggleFollow);
 
 router.get("/follows_count/:id", getFollowsCount);
 

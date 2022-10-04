@@ -1,23 +1,23 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuthContext } from "./hooks/useAuthContext";
 
-import Signup from "./pages/signup/Signup";
-import Login from "./pages/login/Login";
-import UserHome from "./pages/Home/UserHome";
-import Users from "./pages/users/Users";
-import VerifiedUser from "./pages/VerifiedUser";
-import VerifyUser from "./pages/VerifyUser";
-import UserProfile from "./pages/UserProfile";
-import Follows from "./pages/follows/Follows";
-import EditProfile from "./pages/profileEdit/EditProfile";
-import Categories from "./pages/categories/Categories";
-import Lesson from "./pages/lesson/Lesson";
-import Result from "./pages/result/Result";
-import Learnings from "./pages/learnings/Learnings";
-import AdminLogin from "./pages/adminLogin/AdminLogin";
-import AdminCategories from "./pages/adminCategories/AdminCategories";
-import EditCategory from "./pages/editCategory/EditCategory";
-import AdminUsersList from "./pages/adminUsersPage/AdminUsersList";
+import Signup from "./pages/user/auth/signup/Signup";
+import Login from "./pages/user/auth/login/Login";
+import UserHome from "./pages/user/Home/UserHome";
+import Users from "./pages/user/users/Users";
+import VerifiedUser from "./pages/user/VerifiedUser";
+import VerifyUser from "./pages/user/VerifyUser";
+import UserProfile from "./pages/user/UserProfile";
+import Follows from "./pages/user/follows/Follows";
+import EditProfile from "./pages/user/profileEdit/EditProfile";
+import Categories from "./pages/user/categories/Categories";
+import Lesson from "./pages/user/lesson/Lesson";
+import Result from "./pages/user/result/Result";
+import Learnings from "./pages/user/learnings/Learnings";
+import AdminLogin from "./pages/admin/login/AdminLogin";
+import AdminCategories from "./pages/admin/categories/AdminCategories";
+import EditCategory from "./pages/admin/editCategory/EditCategory";
+import AdminUsersList from "./pages/admin/users/AdminUsersList";
 import PageNotFound from "./pages/PageNotFound";
 
 function App() {

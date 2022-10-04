@@ -1,3 +1,7 @@
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+
+import AdminNavLinks from "./AdminNavLinks";
 import {
   ArrowPathIcon,
   Bars4Icon,
@@ -5,11 +9,9 @@ import {
   ExclamationTriangleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+
 import { useAuthContext } from "hooks/useAuthContext";
 import useGetUser from "hooks/useGetUser";
-import AdminNavLinks from "./AdminNavLinks";
 
 const AdminNavbar = () => {
   const { user, dispatch } = useAuthContext();

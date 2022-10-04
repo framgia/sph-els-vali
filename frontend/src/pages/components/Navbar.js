@@ -1,13 +1,15 @@
-import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+
+import NavLinks from "./NavLinks";
 import {
   ArrowPathIcon,
   Bars4Icon,
   ExclamationTriangleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import NavLinks from "./NavLinks";
+import { ChevronDownIcon } from "@heroicons/react/24/solid";
+
 import { useAuthContext } from "hooks/useAuthContext";
 import useGetUser from "hooks/useGetUser";
 

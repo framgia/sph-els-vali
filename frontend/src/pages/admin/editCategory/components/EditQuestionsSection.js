@@ -8,8 +8,8 @@ import AddWordPopup from "./AddWordPopup";
 import Question from "./Question";
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
-import useGetQuestions from "hooks/useGetQuestions";
 import usePostQuestion from "hooks/usePostQuestion";
+import useGetAdminQuestions from "hooks/useGetAdminQuestions";
 import { toastError } from "utils/toast";
 import { QuestionSchema } from "validations/questionValidation";
 
@@ -17,7 +17,7 @@ const EditQuestionsSection = () => {
   const { id } = useParams();
   const [toggle, setToggle] = useState(false);
   const [forceUpdate, setForceupdate] = useState(false);
-  const { data } = useGetQuestions(id, forceUpdate);
+  const { data } = useGetAdminQuestions(id, forceUpdate);
   const { postQuestion } = usePostQuestion();
 
   const {

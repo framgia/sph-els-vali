@@ -7,9 +7,11 @@ const useGetActivities = (userId) => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(null);
+  let isCalled = false;
 
   const getActivities = useCallback(
     async (userId) => {
+      isCalled = true;
       setIsLoading(true);
       setError(null);
       try {
@@ -31,7 +33,7 @@ const useGetActivities = (userId) => {
   );
 
   useEffect(() => {
-    if (user) {
+    if (user && !isCalled) {
       getActivities(userId);
     }
   }, [userId]);

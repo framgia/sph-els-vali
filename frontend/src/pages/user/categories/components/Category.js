@@ -30,9 +30,7 @@ const Category = ({
         <div className="flex justify-between">
           <button
             onClick={handleStart}
-            className={`btn2 w-[40%] font-medium min-w-fit ${
-              score === questionsCount ? "invisible" : "visible"
-            }`}
+            className="btn2 w-[40%] font-medium min-w-fit"
           >
             Retake
           </button>

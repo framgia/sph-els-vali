@@ -18,30 +18,28 @@ const Result = () => {
       <Navbar />
       <div className=" flex-grow flex flex-col sm:w-[80%] lg:w-[60%] mx-auto py-8 space-y-1">
         <div className="bg-white p-2 rounded-md shadow-md">
-          {data && (
+          {data && resultData ? (
             <HeaderSection
               current={resultData?.score}
               all={data?.questions.length}
               title={`Results for: ${data?.name}`}
             />
-          )}
+          ) : null}
 
           {resultData && data
-            ? resultData.result
-                .sort((a, b) => a.question_id - b.question_id)
-                .map((result, i) => (
-                  <BodySection
-                    key={result.question_id}
-                    question={
-                      data.questions.filter(
-                        (question) => question.id === result.question_id
-                      )[0]
-                    }
-                    user_answer={result.user_answer}
-                    correct_answer={result.correct_answer}
-                    correct={result.correct}
-                  />
-                ))
+            ? resultData.result.map((result, i) => (
+                <BodySection
+                  key={result.question_id}
+                  question={
+                    data.questions.filter(
+                      (question) => question.id === result.question_id
+                    )[0]
+                  }
+                  user_answer={result.user_answer}
+                  correct_answer={result.correct_answer}
+                  correct={result.correct}
+                />
+              ))
             : null}
           {isLoading || questionsLoading ? (
             <ArrowPathIcon className="w-8 animate-spin mx-auto my-2" />

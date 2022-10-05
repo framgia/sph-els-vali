@@ -7,9 +7,11 @@ const useGetUser = (userId, dependencies) => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(null);
+  let isCalled = false;
 
   const getUser = useCallback(
     async (userId) => {
+      isCalled = true;
       setIsLoading(true);
       setError(null);
       try {
@@ -34,7 +36,7 @@ const useGetUser = (userId, dependencies) => {
     [userId]
   );
   useEffect(() => {
-    if (user) {
+    if (user && !isCalled) {
       getUser(userId);
     }
   }, [userId, dependencies]);

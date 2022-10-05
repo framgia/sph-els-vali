@@ -23,6 +23,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
+  Quiz.shuffle = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  };
+
   Quiz.getLesson = async (id, user_id) => {
     const userlesson = await sequelize.models.UserLesson.findOne({
       where: { quiz_id: id, user_id },
@@ -61,12 +69,41 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     const result = [];
+    const shuffledQuestions = Quiz.shuffle(Questions);
+    const shuffledChoices = Quiz.shuffle([
+      "choice_1",
+      "choice_2",
+      "choice_3",
+      "choice_4",
+    ]);
 
-    Questions.map(({ id, title, choice_1, choice_2, choice_3, choice_4 }) => {
+    const questoinsShuffleArray = shuffledQuestions.map(
+      (question) => question.id
+    );
+
+    const shuffleArray = await sequelize.models.QuestionsShufflePattern.findOne(
+      { where: { quiz_id: id, user_id } }
+    );
+
+    if (shuffleArray) {
+      await shuffleArray.update({
+        questions_shuffle_array: questoinsShuffleArray,
+        choices_shuffle_array: shuffledChoices,
+      });
+    } else {
+      await sequelize.models.QuestionsShufflePattern.create({
+        quiz_id: id,
+        user_id,
+        questions_shuffle_array: questoinsShuffleArray,
+        choices_shuffle_array: shuffledChoices,
+      });
+    }
+
+    shuffledQuestions.map((question) => {
       result.push({
-        id,
-        title,
-        choices: [choice_1, choice_2, choice_3, choice_4],
+        id: question.id,
+        title: question.title,
+        choices: shuffledChoices.map((choice) => question[choice]),
       });
     });
 
@@ -146,6 +183,88 @@ module.exports = (sequelize, DataTypes) => {
     );
 
     return result;
+  };
+
+  Quiz.getQuestions = async (id, user_id) => {
+    const { name, Questions } = await Quiz.findByPk(id, {
+      include: [sequelize.models.Question],
+      attributes: ["name"],
+    });
+
+    const result = [];
+
+    const shuffleArray = await sequelize.models.QuestionsShufflePattern.findOne(
+      { where: { quiz_id: id, user_id } }
+    );
+
+    if (shuffleArray) {
+      const questions = shuffleArray.questions_shuffle_array.map(
+        (questionId) =>
+          Questions.filter((question) => question.id === questionId)[0]
+      );
+
+      questions.map((question) => {
+        result.push({
+          id: question.id,
+          title: question.title,
+          choices: shuffleArray.choices_shuffle_array.map(
+            (choice) => question[choice]
+          ),
+          correct_answer: question.correct_answer,
+        });
+      });
+    } else {
+      Questions.map(
+        ({
+          id,
+          title,
+          choice_1,
+          choice_2,
+          choice_3,
+          choice_4,
+          correct_answer,
+        }) => {
+          result.push({
+            id,
+            title,
+            choices: [choice_1, choice_2, choice_3, choice_4],
+            correct_answer,
+          });
+        }
+      );
+    }
+
+    return { result, name };
+  };
+
+  Quiz.adminGetQuestions = async (id) => {
+    const { name, Questions } = await Quiz.findByPk(id, {
+      include: [sequelize.models.Question],
+      attributes: ["name"],
+    });
+
+    const result = [];
+
+    Questions.map(
+      ({
+        id,
+        title,
+        choice_1,
+        choice_2,
+        choice_3,
+        choice_4,
+        correct_answer,
+      }) => {
+        result.push({
+          id,
+          title,
+          choices: [choice_1, choice_2, choice_3, choice_4],
+          correct_answer,
+        });
+      }
+    );
+
+    return { result, name };
   };
 
   return Quiz;

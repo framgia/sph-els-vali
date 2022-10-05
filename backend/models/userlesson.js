@@ -132,6 +132,10 @@ module.exports = (sequelize, DataTypes) => {
     let resp = false;
     const result = [];
 
+    const shuffleArray = await sequelize.models.QuestionsShufflePattern.findOne(
+      { where: { quiz_id, user_id } }
+    );
+
     const userlesson = await sequelize.models.UserLesson.findOne({
       where: { quiz_id, user_id },
     });
@@ -143,9 +147,20 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     if (userlesson && !quiz) {
-      const questions = await sequelize.models.Question.findAll({
+      const Questions = await sequelize.models.Question.findAll({
         where: { quiz_id },
       });
+
+      let questions;
+      if (shuffleArray) {
+        questions = shuffleArray.questions_shuffle_array.map(
+          (questionId) =>
+            Questions.filter((question) => question.id === questionId)[0]
+        );
+      } else {
+        questions = Questions;
+      }
+
       await Promise.all(
         questions.map(async (question) => {
           const correct_answer = await sequelize.models.Question.findOne({
@@ -161,15 +176,28 @@ module.exports = (sequelize, DataTypes) => {
           });
         })
       );
-      res = true;
+
+      resp = true;
+      return { resp, score, result };
     }
 
     const answeredQuestionIdList = [];
     quiz.UserAnswers.map((user_answer) => {
       answeredQuestionIdList.push(user_answer.question_id);
     });
+
+    let questions;
+    if (shuffleArray) {
+      questions = shuffleArray.questions_shuffle_array.map(
+        (questionId) =>
+          quiz.Questions.filter((question) => question.id === questionId)[0]
+      );
+    } else {
+      questions = quiz.Questions;
+    }
+
     await Promise.all(
-      quiz.Questions.map(async (question) => {
+      questions.map(async (question) => {
         const correct_answer = await sequelize.models.Question.findOne({
           where: { id: question.id },
           attributes: [question.correct_answer],

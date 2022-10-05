@@ -9,6 +9,7 @@ const {
   deleteQuestion,
   editQuestion,
   deleteUser,
+  getAdminQuestions,
 } = require("../controllers/adminApiController");
 
 const router = express.Router();
@@ -25,6 +26,8 @@ router.put(
 );
 
 router.get("/category/:id", getCategory);
+
+router.get("/admin/questions/:id", getAdminQuestions);
 
 router.post(
   "/admin/categories/add",

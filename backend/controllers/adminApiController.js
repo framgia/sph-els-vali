@@ -64,6 +64,25 @@ const getCategory = async (req, res, next) => {
   }
 };
 
+const getAdminQuestions = async (req, res, next) => {
+  const { id } = req.params;
+  const isAdmin = req.isAdmin;
+
+  try {
+    if (!isAdmin) {
+      return res.status(403).json({ error: "You are not an admin" });
+    }
+
+    const { result, name } = await Quiz.adminGetQuestions(id);
+
+    res.status(200).json({ questions: result, name });
+  } catch (err) {
+    res
+      .status(400)
+      .json({ error: "Something went wrong, please try again later" });
+  }
+};
+
 const postCategory = async (req, res, next) => {
   const isAdmin = req.isAdmin;
   const { name, description } = req.body;
@@ -210,4 +229,5 @@ module.exports = {
   deleteQuestion,
   editQuestion,
   deleteUser,
+  getAdminQuestions,
 };

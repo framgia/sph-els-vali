@@ -120,19 +120,18 @@ const getResult = async (req, res, next) => {
       return res.status(404).json({ error: "Quiz was not taken" });
     }
 
-    const { resp, score, result } = await UserLesson.getResult(
-      user_id,
-      quiz_id
-    );
+    const { resp, score, result, questionsShuffleOrder } =
+      await UserLesson.getResult(user_id, quiz_id);
+
     if (resp) {
-      return res.status(200).json({ result, score });
+      return res.status(200).json({ result, score, questionsShuffleOrder });
     }
 
     if (userlesson !== score) {
       await userlesson.update({ score });
     }
 
-    res.status(200).json({ result, score });
+    res.status(200).json({ result, score, questionsShuffleOrder });
   } catch (err) {
     res
       .status(400)

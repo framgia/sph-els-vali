@@ -1,6 +1,7 @@
 import { ToastContainer } from "react-toastify";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import ReactRouterPrompt from "react-router-prompt";
 
 import Navbar from "pages/components/Navbar";
 import HeaderSection from "./components/HeaderSection";
@@ -24,6 +25,7 @@ const Lesson = () => {
   } = useLesson(answer, setAnswer, data, id);
 
   const bntClass = `btn2 ${currentIndex > 0 ? "visible" : "invisible"}`;
+
   return (
     <div className="min-h-[100vh] w-[100%] h-[100%] flex flex-col">
       <Navbar />
@@ -73,6 +75,28 @@ const Lesson = () => {
         draggable
         pauseOnHover
       />
+      <ReactRouterPrompt when={currentIndex + 1 !== data?.questions.length}>
+        {({ isActive, onConfirm, onCancel }) =>
+          isActive && (
+            <div className="fixed bg-black w-[100%] h-[100%] left-0 bottom-0 bg-opacity-20 z-10 flex justify-center items-center">
+              <div className="bg-white opacity-100 w-fit max-w-[80%] p-10 space-y-5  rounded-xl">
+                <p>
+                  Even if you did not complete the lesson, your results will be
+                  updated and saved, do you really want to leave?
+                </p>
+                <div className="flex space-x-3 justify-center">
+                  <button className="btn_white" onClick={onCancel}>
+                    Cancel
+                  </button>
+                  <button className="btn2" onClick={onConfirm}>
+                    Yes
+                  </button>
+                </div>
+              </div>
+            </div>
+          )
+        }
+      </ReactRouterPrompt>
     </div>
   );
 };

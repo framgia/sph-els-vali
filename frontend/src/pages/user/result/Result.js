@@ -26,20 +26,27 @@ const Result = () => {
             />
           ) : null}
 
-          {resultData && data
-            ? resultData.result.map((result, i) => (
-                <BodySection
-                  key={result.question_id}
-                  question={
-                    data.questions.filter(
-                      (question) => question.id === result.question_id
+          {resultData?.questionsShuffleOrder && data
+            ? resultData?.questionsShuffleOrder
+                .map(
+                  (order) =>
+                    resultData?.result.filter(
+                      (res) => res.question_id === order
                     )[0]
-                  }
-                  user_answer={result.user_answer}
-                  correct_answer={result.correct_answer}
-                  correct={result.correct}
-                />
-              ))
+                )
+                ?.map((result) => (
+                  <BodySection
+                    key={result.question_id}
+                    question={
+                      data.questions.filter(
+                        (question) => question.id === result.question_id
+                      )[0]
+                    }
+                    user_answer={result.user_answer}
+                    correct_answer={result.correct_answer}
+                    correct={result.correct}
+                  />
+                ))
             : null}
           {isLoading || questionsLoading ? (
             <ArrowPathIcon className="w-8 animate-spin mx-auto my-2" />

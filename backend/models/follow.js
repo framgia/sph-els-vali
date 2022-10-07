@@ -92,13 +92,13 @@ module.exports = (sequelize, DataTypes) => {
       });
       follow = true;
     } else {
-      const follow = await Follow.create({
+      const follows = await Follow.create({
         follower_id: user_id,
         following_id: id,
         flag: true,
       });
       await sequelize.models.ActivityLog.create({
-        relatable_id: follow.id,
+        relatable_id: follows.id,
         relatable_type: "follows",
         user_id: user_id,
       });

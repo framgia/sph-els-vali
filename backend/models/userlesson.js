@@ -178,7 +178,12 @@ module.exports = (sequelize, DataTypes) => {
       );
 
       resp = true;
-      return { resp, score, result };
+      return {
+        resp,
+        score,
+        result,
+        questionsShuffleOrder: shuffleArray.questions_shuffle_array,
+      };
     }
 
     const answeredQuestionIdList = [];
@@ -230,7 +235,12 @@ module.exports = (sequelize, DataTypes) => {
       })
     );
 
-    return { resp, score, result };
+    return {
+      resp,
+      score,
+      result,
+      questionsShuffleOrder: shuffleArray.questions_shuffle_array,
+    };
   };
 
   return UserLesson;
